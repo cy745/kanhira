@@ -59,20 +59,7 @@ public class Kanhira {
       if (ch < 0) {
         break;
       }
-      Converter converter = null;
-      Character.UnicodeBlock block = CharKind.unicodeBlock((char)ch);
-      if (CharKind.isKanji(block)) {
-        converter = kanjiConverter;
-      } else if (CharKind.isHiragana(block)) {
-        converter = hiraganaConverter;
-      } else if (CharKind.isKatakana(block)) {
-        converter = katakanaConverter;
-      }
-      if (converter == null) {
-        converter = defaultConverter;
-      }
-
-      String converted = converter.convert(input);
+      String converted = getConverter((char)ch).convert(input);
       if (converted == null) {
         input.consume(1);
       } else {
@@ -80,6 +67,14 @@ public class Kanhira {
       }
     }
     return s.toString();
+  }
+  
+  Converter getConverter(char ch) {
+    Character.UnicodeBlock block = CharKind.unicodeBlock((char)ch);
+    if (CharKind.isKanji(block))    return kanjiConverter;
+    if (CharKind.isHiragana(block)) return hiraganaConverter;
+    if (CharKind.isKatakana(block)) return katakanaConverter;
+    return defaultConverter;
   }
   
   public String convert(String string) {

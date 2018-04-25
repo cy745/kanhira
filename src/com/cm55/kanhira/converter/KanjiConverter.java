@@ -68,8 +68,6 @@ public class KanjiConverter implements Converter {
       String matchedYomi = kanjiYomi.getYomiFor(checkString);
       if (matchedYomi != null) {
         
-        //ystem.out.println("" + kanjiYomi);
-        
         // consumeする。1は最初の漢字の分
         input.consume(1 + kanjiYomi.wholeLength());
         
