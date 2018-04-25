@@ -17,7 +17,8 @@
 
 package com.cm55.kanhira.converter;
 
-import com.cm55.kanhira.*;
+import com.cm55.kanhira.dict.*;
+import com.cm55.kanhira.itaiji.*;
 
 /**
  * This class implements conversion methods that converts a Kanji word.

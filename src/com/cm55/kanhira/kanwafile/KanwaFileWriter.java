@@ -5,6 +5,8 @@ import java.io.*;
 import java.util.*;
 
 import com.cm55.kanhira.*;
+import com.cm55.kanhira.dict.*;
+import com.cm55.kanhira.itaiji.*;
 
 /**
  * This class represents the Kanwa dictionary.
@@ -255,7 +257,7 @@ public class KanwaFileWriter {
                 file.writeUTF(kanjiYomi.getYomi());
                 file.writeByte(kanjiYomi.getOkuriIni());
            }
-            KanwaFileEntry entry = new KanwaFileEntry(offset, list.size());
+            KanwaFileEntry entry = new KanwaFileEntry(key, offset, list.size());
             entryTable.put(key, entry);
         }
         file.seek(4);

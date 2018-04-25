@@ -19,8 +19,10 @@ package com.cm55.kanhira.kanwafile;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 import com.cm55.kanhira.*;
+import com.cm55.kanhira.dict.*;
 
 /**
  * This class represents the Kanwa dictionary.
@@ -65,7 +67,16 @@ public class KanwaFileReader implements KanwaDict {
     contentsTable.put(key, kanjiYomiList = createList(entry));
     return kanjiYomiList;
   }
-
+  
+  public Stream<KanwaFileEntry>allEntries() {
+    initialize();
+    return entryTable.values().stream();
+  }
+  
+  public KanjiYomiList getContent(KanwaFileEntry entry) {
+    return createList(entry);
+  }
+  
   KanjiYomiList createList(KanwaFileEntry entry) {
     assert entry != null;
     List<KanjiYomi> list = new ArrayList<KanjiYomi>();
@@ -104,7 +115,7 @@ public class KanwaFileReader implements KanwaDict {
         Character key = new Character(file.readChar());
         int offset = file.readInt();
         int numWords = file.readShort();
-        entryTable.put(key, new KanwaFileEntry(offset, numWords));
+        entryTable.put(key, new KanwaFileEntry(key, offset, numWords));
       }
     } catch (IOException ex) {
       throw new KanhiraException(ex);

@@ -23,8 +23,10 @@ package com.cm55.kanhira.kanwafile;
  * @author Kawao, Tomoyuki (kawao@kawao.com)
  * @version $Revision: 1.2 $ $Date: 2003/01/01 08:18:44 $
  */
-class KanwaFileEntry {
+public class KanwaFileEntry {
 
+  public final char key;
+  
   private final int offset;
 
   private final int numberOfWords;
@@ -37,7 +39,8 @@ class KanwaFileEntry {
    * @param numberOfWords
    *          number of words.
    */
-  KanwaFileEntry(int offset, int numberOfWords) {
+  KanwaFileEntry(char key, int offset, int numberOfWords) {
+    this.key = key;
     this.offset = offset;
     this.numberOfWords = numberOfWords;
   }

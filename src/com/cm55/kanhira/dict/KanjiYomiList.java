@@ -1,6 +1,7 @@
-package com.cm55.kanhira;
+package com.cm55.kanhira.dict;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * 最初の文字が同じ漢字の熟語について、その漢字の長さ順に{@link KanjiYomi}を格納したもの。
@@ -18,6 +19,14 @@ public class KanjiYomiList implements Iterable<KanjiYomi> {
 
   private List<KanjiYomi>list;
 
+  /**
+   * デバッグ用。文字列化
+   */
+  @Override
+  public String toString() {
+    return list.stream().map(s->s.toString()).collect(Collectors.joining("\n"));
+  }
+  
   /** 何も格納されていない{@link KanjiYomiList}を作成する */
   public KanjiYomiList() {
     this.list = null;
