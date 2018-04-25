@@ -1,4 +1,4 @@
-package com.cm55.kanhira.converter;
+package com.cm55.kanhira;
 
 /**
  * 文字種類の判定

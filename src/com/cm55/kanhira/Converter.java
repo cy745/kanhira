@@ -15,11 +15,9 @@
  * GNU General Public License for more details.
  */
 
-package com.cm55.kanhira.converter;
+package com.cm55.kanhira;
 
 import java.io.*;
-
-import com.cm55.kanhira.*;
 
 /**
  * An object that implements the Converter interface can convert a string.
@@ -100,7 +98,7 @@ public interface Converter {
           try {
             ch = reader.read();
           } catch (IOException ex) {
-            throw new KanhiraException(ex);
+            throw new RuntimeException(ex);
           }
           if (ch < 0) {
             break;

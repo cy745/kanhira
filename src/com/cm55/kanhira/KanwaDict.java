@@ -1,4 +1,4 @@
-package com.cm55.kanhira.dict;
+package com.cm55.kanhira;
 
 /**
  * 漢字かな辞書インターフェース

@@ -2,9 +2,6 @@
 
 import java.io.*;
 
-import com.cm55.kanhira.dict.*;
-import com.cm55.kanhira.kakasi.*;
-
 public class StringTest {
 
   public static void main(String[]args) throws IOException  {
@@ -14,9 +11,9 @@ public class StringTest {
       new KanwaFileAccess.RandomFile("dict/kanwadict")
     );
     */
-    KakasiDictReader dict = new KakasiDictReader("dict/kakasidict");
+    KanjiYomiMap map  = KakasiDictReader.load("dict/kakasidict");
     
-    Kanhira kakasi = new Kanhira((KanwaDict)dict.getMap());
+    Kanhira kakasi = new Kanhira(map);
     
 //    String string = "果たし";
     String string = "海外での介入を終了し、アメリカ軍を国に帰還させるという彼の選挙公約を、トランプがなんらかの形で実行しているという、ありがちな誤解が存在しているように見える。";

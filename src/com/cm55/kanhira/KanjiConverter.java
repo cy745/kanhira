@@ -15,14 +15,9 @@
  * GNU General Public License for more details.
  */
 
-package com.cm55.kanhira.converter;
+package com.cm55.kanhira;
 
 import java.util.*;
-
-import javax.swing.text.html.*;
-
-import com.cm55.kanhira.dict.*;
-import com.cm55.kanhira.itaiji.*;
 
 /**
  * This class implements conversion methods that converts a Kanji word.

@@ -1,10 +1,6 @@
-package com.cm55.kanhira.kakasi;
+package com.cm55.kanhira;
 
 import java.io.*;
-
-import com.cm55.kanhira.*;
-import com.cm55.kanhira.dict.*;
-import com.cm55.kanhira.itaiji.*;
 
 /**
  * This class represents the Kanwa dictionary.
@@ -15,21 +11,15 @@ import com.cm55.kanhira.itaiji.*;
  */
 public class KakasiDictReader {
 
-  private final KanjiYomiMap map = new KanjiYomiMap();
 
-  public KanjiYomiMap getMap() {
-    return map;
-  }
-  
 
   /*
    * (non-Javadoc)
    * 
    * @see com.kawao.kakasi.KanwaDict#load(java.lang.String)
    */
-
-  public KakasiDictReader(String filename) throws IOException {
-    this(filename, "JISAutoDetect");
+  public static KanjiYomiMap load(String filename) throws IOException {
+    return load(filename, "JISAutoDetect");
   }
 
   /*
@@ -37,12 +27,12 @@ public class KakasiDictReader {
    * 
    * @see com.kawao.kakasi.KanwaDict#load(java.lang.String, java.lang.String)
    */
-  public KakasiDictReader(String filename, String encoding) throws IOException {
+  public static KanjiYomiMap load(String filename, String encoding) throws IOException {
     InputStream in = new FileInputStream(filename);
     try {
       Reader reader = new InputStreamReader(in, encoding);
       try {
-        load(reader);
+        return load(reader);
       } finally {
         try {
           reader.close();
@@ -62,16 +52,13 @@ public class KakasiDictReader {
     }
   }
 
-  public KakasiDictReader(Reader reader) throws IOException {
-    load(reader);
-  }
-  
   /*
    * (non-Javadoc)
    * 
    * @see com.kawao.kakasi.KanwaDict#load(java.io.Reader)
    */
-  private  void load(Reader reader) throws IOException {
+  public static KanjiYomiMap load(Reader reader) throws IOException {
+    KanjiYomiMap map = new KanjiYomiMap();
     BufferedReader in = new BufferedReader(reader);
     while (true) {
       String line = in.readLine();
@@ -137,7 +124,7 @@ public class KakasiDictReader {
           if (index >= length) {
             break;
           }
-          addItem(kanji.toString(), yomi, okurigana);
+          addItem(map, kanji.toString(), yomi, okurigana);
         }
       } else {
         StringBuffer kanji = new StringBuffer();
@@ -149,9 +136,10 @@ public class KakasiDictReader {
           }
           kanji.append(ch);
         }
-        addItem(kanji.toString(), yomi, okurigana);
+        addItem(map, kanji.toString(), yomi, okurigana);
       }
     }
+    return map;
   }
 
   /*
@@ -160,7 +148,7 @@ public class KakasiDictReader {
    * @see com.kawao.kakasi.KanwaDict#addItem(java.lang.String, java.lang.String,
    * char)
    */
-  void addItem(String kanji, String yomi, char okurigana) {
+  static void addItem(KanjiYomiMap map, String kanji, String yomi, char okurigana) {
     Character.UnicodeBlock kanjiBlock = Character.UnicodeBlock.of(kanji.charAt(0));
     if (!kanjiBlock.equals(Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
       // System.err.println("KanwaDictionary: Ignored item:" +

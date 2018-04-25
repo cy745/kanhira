@@ -15,7 +15,7 @@
  * GNU General Public License for more details.
  */
 
-package com.cm55.kanhira.converter;
+package com.cm55.kanhira;
 
 import java.io.*;
 

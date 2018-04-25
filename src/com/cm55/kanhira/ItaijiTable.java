@@ -1,4 +1,4 @@
-package com.cm55.kanhira.itaiji;
+package com.cm55.kanhira;
 
 import java.util.*;
 

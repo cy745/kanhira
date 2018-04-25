@@ -19,9 +19,6 @@ package com.cm55.kanhira;
 
 import java.io.*;
 
-import com.cm55.kanhira.converter.*;
-import com.cm55.kanhira.dict.*;
-
 /**
  * This class is the KAKASI/JAVA main class.
  * 
