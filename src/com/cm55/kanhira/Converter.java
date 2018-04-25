@@ -36,6 +36,6 @@ public interface Converter {
      * @return  false if no character is converted, otherwise true.
      * @exception  IOException  if an I/O error occurred.
      */
-    boolean convert(KanjiInput input, KanjiOutput output);
+    String convert(KanjiInput input);
 
 }

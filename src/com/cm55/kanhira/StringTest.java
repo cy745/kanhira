@@ -10,18 +10,14 @@ public class StringTest {
 
     KanwaFileReader dict = new KanwaFileReader();
     
-    Kanhira kakasi = new Kanhira(dict);
+    Kanhira kakasi = new Kanhira((KanwaDict)dict);
     
-    //String string = "寿限無のソラは京都に晴れる。spice効かせてgoodなソング";
-    String string = "悪名高い悪代官の悪巧みによって、貴社の記者が汽車で帰社した";
+    String string = "寿限無のソラは京都に晴れる。spice効かせてgoodなソング";
+    //String string = "悪名高い悪代官の悪巧みによって、貴社の記者が汽車で帰社した";
     // String string = "悪巧み";
     KanjiInput input = new KanjiInput(new StringReader(string));
 
-    StringWriter writer = new StringWriter(string.length() * 2);
-    KanjiOutput output = new KanjiOutput(writer);
-    kakasi.convert(input, output);
-    String result = writer.toString();
-    System.out.println("" + result);
+    System.out.println("" +    kakasi.convert(input));
     dict.close();
   }
 }

@@ -17,7 +17,7 @@ public class StdTest {
       Kanhira kakasi = new Kanhira(dict);
       KanjiInput input = new KanjiInput(new BufferedReader(new InputStreamReader(System.in)));
       KanjiOutput output = new KanjiOutput(new OutputStreamWriter(System.out));
-      kakasi.convert(input, output);
+      kakasi.convert(input);
       dict.close();
   }
 }

@@ -51,7 +51,8 @@ public class Kanhira {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public void convert(KanjiInput input, KanjiOutput output) {
+  public String convert(KanjiInput input) {
+    StringBuilder s = new StringBuilder();
     while (true) {
       int ch = input.first();
       if (ch < 0) {
@@ -70,10 +71,13 @@ public class Kanhira {
         converter = defaultConverter;
       }
 
-      if (!converter.convert(input, output)) {
+      String converted = converter.convert(input);
+      if (converted == null) {
         input.consume(1);
+      } else {
+        s.append(converted);
       }
     }
-    output.flush();
+    return s.toString();
   }
 }

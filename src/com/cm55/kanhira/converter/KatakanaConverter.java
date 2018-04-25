@@ -40,28 +40,29 @@ public class KatakanaConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public boolean convert(KanjiInput input, KanjiOutput output) {
+  public String convert(KanjiInput input) {
     if (!CharKind.isKatakana(input.first())) {
-      return false;
+      return null;
     }
+    StringBuilder output = new StringBuilder();
     while (true) {
       int ch = input.first();
       if ((ch >= 'ァ' && ch <= 'ン') || ch == 'ヽ'
           || ch == 'ヾ') {
         // from small 'a' to 'n' and iteration marks
         input.consume(1);
-        output.write((char) (ch - 0x60));
+        output.append((char) (ch - 0x60));
       } else if (ch == 'ヴ') {
         input.consume(1);
-        output.write('う');
-        output.write('゛');
+        output.append('う');
+        output.append('゛');
       } else if (CharKind.isKatakana(ch)) {
         input.consume(1);
-        output.write((char) ch);
+        output.append((char) ch);
       } else {
         break;
       }
     }
-    return true;
+    return output.toString();
   }
 }

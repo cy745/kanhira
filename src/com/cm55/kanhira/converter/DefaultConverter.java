@@ -41,15 +41,16 @@ public class DefaultConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public boolean convert(KanjiInput input, KanjiOutput output) {
+  public String convert(KanjiInput input) {
     int ch = input.first();
     if (ch < 0) {
-      return false;
+      return null;
     }
     Character.UnicodeBlock pblock = Character.UnicodeBlock.of((char) ch);
+    StringBuilder output = new StringBuilder();
     while (true) {
       input.consume(1);
-      output.write((char) ch);
+      output.append((char) ch);
       ch = input.first();
       if (ch < 0) {
         break;
@@ -70,7 +71,7 @@ public class DefaultConverter implements Converter {
         break;
       }
     }
-    return true;
+    return output.toString();
   }
 
   private boolean isJapanese(Character.UnicodeBlock block) {

@@ -44,7 +44,7 @@ public class KanjiConverter implements Converter {
    * @param output 結果出力
    * @return true:変換が行われた。false:変換は行われなかった。
    */
-  public boolean convert(KanjiInput input, KanjiOutput output) {
+  public String convert(KanjiInput input) {
 
     //　先頭漢字を取得する。異体字であれば変換しておく
     char key = ItaijiTable.getInstance().convert((char)input.first());
@@ -52,7 +52,7 @@ public class KanjiConverter implements Converter {
     // 先頭漢字用のKanjiYomiListを取得する
     KanjiYomiList kanjiYomiList = kanwaDict.lookup(key);
     if (kanjiYomiList == null || kanjiYomiList.isEmpty()) {
-      return false;
+      return null;
     }
 
     // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
@@ -73,12 +73,11 @@ public class KanjiConverter implements Converter {
         input.consume(1 + kanjiYomi.wholeLength());
         
         // よみを書き込む
-        output.write(matchedYomi);
-        return true;
+        return matchedYomi;
       }
     }
     
     // 変換されなかった。
-    return false;
+    return null;
   }
 }

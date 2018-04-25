@@ -41,21 +41,22 @@ public class HiraganaConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public boolean convert(KanjiInput input, KanjiOutput output) {
+  public String convert(KanjiInput input) {
     int ch = input.first();
     if (!CharKind.isHiragana(ch)) {
-      return false;
+      return null;
     }
-    output.write((char) ch);
+    StringBuilder output = new StringBuilder();
+    output.append((char) ch);
     int length = 1;
     for (;; length++) {
       ch = input.read();
       if (!CharKind.isHiragana(ch)) {
         break;
       }
-      output.write((char) ch);
+      output.append((char) ch);
     }    
     input.consume(length);
-    return true;
+    return output.toString();
   }
 }

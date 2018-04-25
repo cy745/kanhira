@@ -94,14 +94,7 @@ public class KanwaFileReader implements KanwaDict {
    *              if an error occurred when reading kanwa dictionary file.
    */
   private void initialize() {
-    if (entryTable != null)
-      return;
-    String path = System.getProperty("kakasi.kanwaDictionary");
-    if (path == null) {
-      String home = System.getProperty("kakasi.home");
-      path = home + "/lib/kanwadict";
-    }
-
+    if (entryTable != null) return;
     try {
       file = new RandomAccessFile("dict/kanwadict", "r");
       int numKanji = file.readInt();
