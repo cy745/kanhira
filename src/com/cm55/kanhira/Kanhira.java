@@ -52,7 +52,7 @@ public class Kanhira {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public String convert(KanjiInput input) {
+  public String convert(Converter.Input input) {
     StringBuilder s = new StringBuilder();
     while (true) {
       int ch = input.first();
@@ -78,7 +78,7 @@ public class Kanhira {
   }
   
   public String convert(String string) {
-    KanjiInput input = new KanjiInput(new StringReader(string));
+    Converter.Input input = new Converter.Input(new StringReader(string));
     return this.convert(input);
   }
 }

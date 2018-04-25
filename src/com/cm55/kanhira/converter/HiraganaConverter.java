@@ -39,7 +39,7 @@ public class HiraganaConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public String convert(KanjiInput input) {
+  public String convert(Input input) {
     int ch = input.first();
     if (!CharKind.isHiragana(ch)) {
       return null;

@@ -38,7 +38,7 @@ public class KatakanaConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public String convert(KanjiInput input) {
+  public String convert(Input input) {
     if (!CharKind.isKatakana(input.first())) {
       return null;
     }

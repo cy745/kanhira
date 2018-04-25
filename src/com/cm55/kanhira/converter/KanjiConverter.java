@@ -49,7 +49,7 @@ public class KanjiConverter implements Converter {
    * @param output 結果出力
    * @return true:変換が行われた。false:変換は行われなかった。
    */
-  public String convert(KanjiInput input) {
+  public String convert(Input input) {
 
     //　先頭漢字を取得する。異体字であれば変換しておく
     char key = ItaijiTable.getInstance().convert((char)input.first());
