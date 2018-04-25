@@ -17,6 +17,7 @@ public class StringTest {
     System.out.println("" +  kakasi.convert(string));
     */
     dict.allEntries().forEach(e-> {
+      System.out.println("---------------" + e.key);
       System.out.println("" + dict.getContent(e));
     });
     

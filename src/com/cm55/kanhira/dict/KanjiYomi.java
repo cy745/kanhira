@@ -41,7 +41,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   private final String yomi;
   
   /** 
-   * 送り仮名が無い場合は0、ある場合はそのイニシャルの半角アルファベット小文字。
+   * 送り仮名が無い場合は(char)0、ある場合はそのイニシャルの半角アルファベット小文字。
    * 例えば「悪い」の場合は「i」が格納される   */
   private final char okuriIni;
   
@@ -60,7 +60,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * 実際には送り仮名で無い「かな」や「カナ」も含まれる。例えば、「悪巧み」の「み」は送り仮名ではない。
    * 「貴ノ花」には「カナ」が含まれる。
    * @param yomi よみ。上の場合は「あくめいたか」になる。
-   * @param okurigana　送り仮名がなければ0、あれば上の場合は'i'になる。
+   * @param okurigana　送り仮名がなければ(char)0、あれば上の場合は'i'になる。
    */
   public KanjiYomi(String kanji, String yomi, char okuriIni) {
     
