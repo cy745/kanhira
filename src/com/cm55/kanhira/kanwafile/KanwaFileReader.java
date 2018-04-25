@@ -33,13 +33,17 @@ import com.cm55.kanhira.dict.*;
  */
 public class KanwaFileReader implements KanwaDict {
 
-  private RandomAccessFile file;
+  private KanwaFileAccess file;
 
   private Map<Character, KanwaFileEntry> entryTable;
 
   private final Map<Character, KanjiYomiList> contentsTable = new HashMap<Character, KanjiYomiList>(
       8192);
 
+  public KanwaFileReader(KanwaFileAccess file) {
+    this.file = file;
+  }
+  
   /**
    * Looks up the specified character.
    * 
@@ -107,7 +111,6 @@ public class KanwaFileReader implements KanwaDict {
   private void initialize() {
     if (entryTable != null) return;
     try {
-      file = new RandomAccessFile("dict/kanwadict", "r");
       int numKanji = file.readInt();
       entryTable = new HashMap<Character, KanwaFileEntry>(numKanji);
 
