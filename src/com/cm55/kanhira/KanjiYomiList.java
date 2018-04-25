@@ -17,28 +17,26 @@ import java.util.stream.*;
  */
 public class KanjiYomiList  {
 
+  
   private TreeSet<KanjiYomi>list = new TreeSet<>();
 
+  /** このリストに含まれる{@link KanjiYomi}の{@link KanjiYomi#wholeLength()}のうちの最大長 */
   private Integer maxWholeLength = null;
   
+  /** {@link KanjiYomi}を追加する */
   public void add(KanjiYomi kanjiYomi) {
     list.add(kanjiYomi);
     maxWholeLength = null;
   }
   
-  /**
-   * デバッグ用。文字列化
-   */
-  @Override
-  public String toString() {
-    return list.stream().map(s->s.toString()).collect(Collectors.joining("\n"));
+  public List<KanjiYomi>getList() {
+    return new ArrayList<KanjiYomi>(list);
   }
   
-  /** 何も格納されていない{@link KanjiYomiList}を作成する */
-  public KanjiYomiList() {
-    this.list =  new TreeSet<>();
+  public void setList(Collection<KanjiYomi>list) {
+    this.list = new TreeSet<KanjiYomi>(list);
   }
-  
+
   /**
    * このリストに含まれる{@link KanjiYomi}の{@link KanjiYomi#wholeLength()}のうちの最大長を返す。
    * @return
@@ -51,7 +49,16 @@ public class KanjiYomiList  {
     return maxWholeLength;
   }
 
+  /** 処理用のストリームを取得 */
   public Stream<KanjiYomi>stream() {
     return list.stream();
+  }
+  
+  /**
+   * デバッグ用。文字列化
+   */
+  @Override
+  public String toString() {
+    return list.stream().map(s->s.toString()).collect(Collectors.joining("\n"));
   }
 }

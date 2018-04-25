@@ -1,6 +1,7 @@
 package com.cm55.kanhira;
 
 import java.util.*;
+import java.util.stream.*;
 
 public class KanjiYomiMap implements KanwaDict {
 
@@ -18,5 +19,9 @@ public class KanjiYomiMap implements KanwaDict {
   @Override
   public KanjiYomiList lookup(char k) {
     return map.get(k);
+  }
+
+  public Stream<Map.Entry<Character, KanjiYomiList>>stream() {
+    return map.entrySet().stream();
   }
 }
