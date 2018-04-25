@@ -17,6 +17,10 @@
 
 package com.cm55.kanhira.converter;
 
+import java.util.*;
+
+import javax.swing.text.html.*;
+
 import com.cm55.kanhira.dict.*;
 import com.cm55.kanhira.itaiji.*;
 
@@ -52,9 +56,7 @@ public class KanjiConverter implements Converter {
 
     // 先頭漢字用のKanjiYomiListを取得する
     KanjiYomiList kanjiYomiList = kanwaDict.lookup(key);
-    if (kanjiYomiList == null || kanjiYomiList.isEmpty()) {
-      return null;
-    }
+    if (kanjiYomiList == null) return null;
 
     // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
     // 異体字を普通字に変換しておく。
@@ -62,18 +64,13 @@ public class KanjiConverter implements Converter {
         ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength()));
 
     // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
-    for (KanjiYomi kanjiYomi : kanjiYomiList) {
+    Optional<KanjiYomi>opt = kanjiYomiList.stream().filter(ky-> ky.getYomiFor(checkString) != null).findFirst();
+    if (opt.isPresent()) {
+      // consumeする。1は最初の漢字の分
+      input.consume(1 + opt.get().wholeLength());
       
-      // このKanjiYomiに一致するかを調べる。一致すればよみが返される。
-      String matchedYomi = kanjiYomi.getYomiFor(checkString);
-      if (matchedYomi != null) {
-        
-        // consumeする。1は最初の漢字の分
-        input.consume(1 + kanjiYomi.wholeLength());
-        
-        // よみを書き込む
-        return matchedYomi;
-      }
+      // よみを返す
+      return opt.get().getYomiFor(checkString);
     }
     
     // 変換されなかった。

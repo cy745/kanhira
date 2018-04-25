@@ -11,14 +11,21 @@ import java.util.stream.*;
  * <li>天候時
  * <li>代官
  * </ul>
- * の順序で格納されている。この順で処理ができるように{@link Iterable}を実装する。
+ * の順序で格納されている。
  * つまり、最長一致の方針になっている。
- * 例えば対称文字列が「悪い」であった場合、「わる」よりも「わるい」が先に一致する。
+ * 例えば対象文字列が「悪い」であった場合、「わる」よりも「わるい」が先に一致する。
  */
-public class KanjiYomiList implements Iterable<KanjiYomi> {
+public class KanjiYomiList  {
 
-  private List<KanjiYomi>list;
+  private TreeSet<KanjiYomi>list = new TreeSet<>();
 
+  private Integer maxWholeLength = null;
+  
+  public void add(KanjiYomi kanjiYomi) {
+    list.add(kanjiYomi);
+    maxWholeLength = null;
+  }
+  
   /**
    * デバッグ用。文字列化
    */
@@ -29,19 +36,7 @@ public class KanjiYomiList implements Iterable<KanjiYomi> {
   
   /** 何も格納されていない{@link KanjiYomiList}を作成する */
   public KanjiYomiList() {
-    this.list = null;
-  }
-
-  /** {@link KanjiYomi}のリストをあたえて作成する。
-   * リストは{@link KanjiYomi#wholeLength()}の大きい順にソートされる。 */
-  public KanjiYomiList(List<KanjiYomi>list) {
-    Collections.sort(list);
-    this.list = list;
-  }
-  
-  /** 何も格納されていないことを示す */
-  public boolean isEmpty() {
-    return list == null || list.size() == 0;
+    this.list =  new TreeSet<>();
   }
   
   /**
@@ -49,29 +44,14 @@ public class KanjiYomiList implements Iterable<KanjiYomi> {
    * @return
    */
   public int maxWholeLength() {
-    return list.get(0).wholeLength();
+    if (maxWholeLength == null) {
+      OptionalInt i = list.stream().mapToInt(e->e.wholeLength()).max();      
+      maxWholeLength = i.orElse(0);
+    }
+    return maxWholeLength;
   }
 
-  /**
-   * リストに含まれる{@link KanjiYomi}を順に返すイテレータを返す。
-   */
-  @Override
-  public Iterator<KanjiYomi> iterator() {
-    
-    return new Iterator<KanjiYomi>() {
-      int index = 0;
-      
-      @Override
-      public boolean hasNext() {
-        return index < list.size();
-      }
-
-      @Override
-      public KanjiYomi next() {
-        return list.get(index++);
-      }   
-    };
+  public Stream<KanjiYomi>stream() {
+    return list.stream();
   }
-
-
 }
