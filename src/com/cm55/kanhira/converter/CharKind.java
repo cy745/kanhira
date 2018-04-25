@@ -1,4 +1,4 @@
-package com.cm55.kanhira;
+package com.cm55.kanhira.converter;
 
 /**
  * 文字種類の判定
@@ -22,25 +22,25 @@ public class CharKind {
     return true;    
   }
 
-  /**
-   * 文字列を構成する文字がすべて漢字であるかを調べる。文字列長は0でも良い。
-   * @param s
-   * @return
-   */
-  public static boolean isKanji(String s) {
-    for (char c: s.toCharArray()) {
-      if (!isKanji(c)) return false;
-    }
-    return true;
-  }
-
-  public static boolean isKanjiOrHiragana(String s) {
-    for (char c: s.toCharArray()) {
-      Character.UnicodeBlock ub = unicodeBlock(c);
-      if (!isKanji(ub) && !isHiragana(ub)) return false;
-    }
-    return true;
-  }
+//  /**
+//   * 文字列を構成する文字がすべて漢字であるかを調べる。文字列長は0でも良い。
+//   * @param s
+//   * @return
+//   */
+//  public static boolean isKanji(String s) {
+//    for (char c: s.toCharArray()) {
+//      if (!isKanji(c)) return false;
+//    }
+//    return true;
+//  }
+//
+//  public static boolean isKanjiOrHiragana(String s) {
+//    for (char c: s.toCharArray()) {
+//      Character.UnicodeBlock ub = unicodeBlock(c);
+//      if (!isKanji(ub) && !isHiragana(ub)) return false;
+//    }
+//    return true;
+//  }
   
   public static boolean isHiragana(int c) {
     if (c < 0) return false;
@@ -98,8 +98,6 @@ public class CharKind {
     return ub.equals(Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
   }
   
-
-  
   /**
    * 文字のユニコードブロックを取得する。
    * @param c
@@ -107,9 +105,5 @@ public class CharKind {
    */
   public static Character.UnicodeBlock unicodeBlock(char c) {
     return Character.UnicodeBlock.of(c);
-  }
-  
-  public static void main(String[]args) {
-    System.out.println("" + '\u3092');
   }
 }

@@ -19,8 +19,6 @@ package com.cm55.kanhira.converter;
 
 import java.io.*;
 
-import com.cm55.kanhira.*;
-
 /**
  * This class is a default implementation of Converter interface.
  * 

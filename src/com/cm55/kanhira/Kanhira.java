@@ -80,4 +80,9 @@ public class Kanhira {
     }
     return s.toString();
   }
+  
+  public String convert(String string) {
+    KanjiInput input = new KanjiInput(new StringReader(string));
+    return this.convert(input);
+  }
 }

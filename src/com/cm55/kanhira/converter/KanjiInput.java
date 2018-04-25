@@ -14,9 +14,11 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
-package com.cm55.kanhira;
+package com.cm55.kanhira.converter;
 
 import java.io.*;
+
+import com.cm55.kanhira.*;
 
 
 /**

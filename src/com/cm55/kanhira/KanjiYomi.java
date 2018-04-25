@@ -1,5 +1,7 @@
 package com.cm55.kanhira;
 
+import com.cm55.kanhira.converter.*;
+
 /*
  * $Id: KanjiYomi.java,v 1.5 2003/01/01 08:18:44 kawao Exp $
  *
