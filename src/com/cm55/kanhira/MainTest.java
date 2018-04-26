@@ -9,8 +9,8 @@ public class MainTest {
 
   @Test
   public void test() throws IOException  {
-    KanjiYomiMap map = KakasiDictReader.load("dict/kakasidict");
-    Kanhira kakasi = new Kanhira(map);
+    KanwaDict dict = KakasiDictReader.load("dict/kakasidict");
+    Kanhira kakasi = new Kanhira(dict);
     
     assertEquals(
         "かいがいでのかいにゅうをしゅうりょうし、あめりかぐんをくににきかんさせるというかのせんきょこうやくを、ありがちなごかいがそんざいしているようにみえる。",
