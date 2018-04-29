@@ -22,6 +22,9 @@ import java.io.*;
 /**
  * This class is the KAKASI/JAVA main class.
  * 
+ * <p>
+ * 注意：送り仮名は全角ひらがなであること。全角カタカナ、半角カタカナでは送り仮名と認識されない。
+ * </p>
  * @author Kawao, Tomoyuki (kawao@kawao.com)
  * @version $Revision: 1.15 $ $Date: 2003/03/01 12:52:26 $
  */

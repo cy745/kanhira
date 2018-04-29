@@ -22,5 +22,8 @@ public class MainTest {
         kakasi.convert( "安心安全なヤフオク!実現に向けたYahoo!かんたん決済の仕様変更について（再掲）"));
     assertEquals("あくめいたかいあくだいかんのわるだくみによって、きしゃのきしゃがきしゃできしゃした",
         kakasi.convert("悪名高い悪代官の悪巧みによって、貴社の記者が汽車で帰社した"));
+
+    // ※送り仮名は全角ひらがなであること
+    assertEquals("あくこうみによって", kakasi.convert("悪巧ミによって"));
   }
 }
