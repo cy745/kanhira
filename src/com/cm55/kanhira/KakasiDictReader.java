@@ -11,7 +11,7 @@ import java.io.*;
  */
 public class KakasiDictReader {
 
-
+  private static final String DEFAULT_ENCODING = "JISAutoDetect";
 
   /*
    * (non-Javadoc)
@@ -19,7 +19,7 @@ public class KakasiDictReader {
    * @see com.kawao.kakasi.KanwaDict#load(java.lang.String)
    */
   public static KanjiYomiMap load(String filename) throws IOException {
-    return load(filename, "JISAutoDetect");
+    return load(filename, DEFAULT_ENCODING);
   }
 
   /*
@@ -28,28 +28,19 @@ public class KakasiDictReader {
    * @see com.kawao.kakasi.KanwaDict#load(java.lang.String, java.lang.String)
    */
   public static KanjiYomiMap load(String filename, String encoding) throws IOException {
-    InputStream in = new FileInputStream(filename);
-    try {
-      Reader reader = new InputStreamReader(in, encoding);
-      try {
-        return load(reader);
-      } finally {
-        try {
-          reader.close();
-          in = null;
-        } catch (IOException exception) {
-          exception.printStackTrace();
-        }
-      }
-    } finally {
-      if (in != null) {
-        try {
-          in.close();
-        } catch (IOException exception) {
-          exception.printStackTrace();
-        }
-      }
+    try (InputStream in = new FileInputStream(filename)) {
+      return load(in, encoding);
     }
+  }
+  
+  public static KanjiYomiMap load(InputStream in) throws IOException {
+    return load(in,  DEFAULT_ENCODING);
+  }
+  
+  public static KanjiYomiMap load(InputStream in, String encoding) throws IOException {
+    try (Reader reader = new InputStreamReader(in, encoding)) {      
+      return load(reader);
+    }    
   }
 
   /*
