@@ -147,22 +147,25 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   /**
    * Compares two objects for equality.
    * 
-   * @param object
+   * @param o
    *          the object to compare with.
    * @return true if the objects are the same; false otherwise.
    */
-  public boolean equals(Object object) {
-    if (!(object instanceof KanjiYomi)) return false;
-    KanjiYomi that = (KanjiYomi) object;
-    return this.hashCode() == that.hashCode() && 
-        this.kanji.equals(that.kanji) && 
-        this.yomi.equals(that.yomi) && 
-        this.okuriIni.equals(that.okuriIni);
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof KanjiYomi)) return false;
+    KanjiYomi that = (KanjiYomi)o;
+    return 
+      this.hashCode() == that.hashCode() && 
+      this.kanji.equals(that.kanji) && 
+      this.yomi.equals(that.yomi) && 
+      this.okuriIni.equals(that.okuriIni);
   }
 
   /**
    * Returns a hash code value for this object.
    */
+  @Override
   public int hashCode() {
     return hashCode;
   }
@@ -179,11 +182,10 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     int r = this.wholeLength() - that.wholeLength();
     if (r != 0) return -r;
     
-    // 全く同じ漢字。ありえないはずだが。。
+    // 全く同じKanjiYomiオブジェクト。これはありえない。
     if (this.equals(that)) return 0;
     
     // 異なる漢字で同じ長さ。生成順に並べる
     return this.objectIndex < that.objectIndex ? -1 : 1;
   }
-
 }

@@ -23,6 +23,17 @@ public class KanjiYomiMapTest {
     Kanhira kakasi = new Kanhira(map);
     assertEquals("あくめいたかくあくめいたかいあくだいかん",
         kakasi.convert("悪名高く悪名高い悪代官"));
+    
+    assertTrue(map.remove("悪名高", "あくめいたかk"));
+    assertEquals(
+        "悪徳不動産屋,あくとくふどうさんや,,6\n" + 
+        "悪名高,あくめいたか,i,4\n" + 
+        "悪代官,あくだいかん,,3", map.lookup('悪').get().toString());
+    
+    map.add("悪名", "あくめい");
+    
+    assertEquals("あくめいくあくめいたかいあくだいかん",
+        kakasi.convert("悪名高く悪名高い悪代官"));
   }
 
 }

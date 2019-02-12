@@ -34,9 +34,12 @@ public class KanjiYomiMap implements KanwaDict {
     KanjiYomiList list = map.get(p.key);
     if (list == null) return false;
     KanjiYomi kanjiYomi = new KanjiYomi(p.kanji, p.yomi, p.okurigana);
-    return list.remove(kanjiYomi);    
+    if (!list.remove(kanjiYomi)) return false;
+    if (list.size() == 0) {
+      map.remove(p.key);
+    }
+    return true;    
   }
-
   
   /** 
    * 漢字の最初の文字と{@link KanjiYomi}を辞書に追加する

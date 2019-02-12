@@ -22,18 +22,21 @@ public class KanjiYomiList  {
    * {@link KanjiYomi}はその{@link KanjiYomi#wholeLength()}の逆順に順序付けされる。
    */
   private TreeSet<KanjiYomi>list = new TreeSet<>();
-
-  /** このリストに含まれる{@link KanjiYomi}の{@link KanjiYomi#wholeLength()}のうちの最大長 */
-  private Integer maxWholeLength = null;
   
   /** {@link KanjiYomi}を追加する */
   public void add(KanjiYomi kanjiYomi) {
     list.add(kanjiYomi);
-    maxWholeLength = null;
+
   }
   
+  /** {@link KanjiYomi}を削除する */
   public boolean remove(KanjiYomi kanjiYomi) {
     return list.remove(kanjiYomi);    
+  }
+
+  /** 登録数を取得する */
+  public int size() {
+    return list.size();
   }
 
   /**
@@ -41,11 +44,7 @@ public class KanjiYomiList  {
    * @return
    */
   public int maxWholeLength() {
-    if (maxWholeLength == null) {
-      OptionalInt i = list.stream().mapToInt(e->e.wholeLength()).max();      
-      maxWholeLength = i.orElse(0);
-    }
-    return maxWholeLength;
+    return list.first().wholeLength();
   }
 
   /** 処理用のストリームを取得 */
