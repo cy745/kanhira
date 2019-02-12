@@ -47,7 +47,7 @@ public class Kanhira {
    * dicts[0]に"悪徳"が定義されていれば、そちらが採用される。
    * @param dicts
    */
-  public Kanhira(KanwaDict[]dicts) {
+  public Kanhira(KanwaDict...dicts) {
     if (dicts == null) throw new NullPointerException();
     kanjiConverter = new KanjiConverter(dicts);
   }

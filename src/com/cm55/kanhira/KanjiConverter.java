@@ -29,13 +29,13 @@ import java.util.stream.*;
 public class KanjiConverter implements Converter {
 
   /** 漢字辞書 */
-  private final KanwaDict[]kanwaDict;
+  private final List<KanwaDict>dicts;
 
   /**
    * 使用する漢字辞書を指定する
    */
-  public KanjiConverter(KanwaDict[] kanwaDict) {
-    this.kanwaDict = kanwaDict;
+  public KanjiConverter(KanwaDict...kanwaDict) {
+    this.dicts = Arrays.stream(kanwaDict).filter(d->d != null).collect(Collectors.toList());
   }
 
   /**
@@ -51,7 +51,7 @@ public class KanjiConverter implements Converter {
     char key = ItaijiTable.convert((char)input.first());
     
     // 先頭漢字用のKanjiYomiListのリストを取得する。これは優先順位順になる。
-    List<KanjiYomiList> list = Arrays.stream(kanwaDict)
+    List<KanjiYomiList> list = dicts.stream()
         .map(dict->dict.lookup(key))
         .filter(Optional::isPresent).map(Optional::get)
         .collect(Collectors.toList());
