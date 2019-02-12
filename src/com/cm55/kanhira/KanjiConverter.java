@@ -50,7 +50,7 @@ public class KanjiConverter implements Converter {
     //　先頭漢字を取得する。異体字であれば変換しておく
     char key = ItaijiTable.convert((char)input.first());
     
-    // 先頭漢字用のKanjiYomiListのリストを取得する
+    // 先頭漢字用のKanjiYomiListのリストを取得する。これは優先順位順になる。
     List<KanjiYomiList> list = Arrays.stream(kanwaDict)
         .map(dict->dict.lookup(key))
         .filter(Optional::isPresent).map(Optional::get)
@@ -63,14 +63,15 @@ public class KanjiConverter implements Converter {
     // 先読みを行いチェック文字列を作成。先頭文字は読み込み済なので一文字減らす。
     String checkString = key + ItaijiTable.convert(input.read(readAHead - 1));
 
-    // 各KanjiYomiListについて、最初に一致する複数のKanjiYomiオブジェクトを取得する
+    // 各KanjiYomiListについて、最初に一致する複数のKanjiYomiオブジェクトの中の最初のものを取得する
+    // つまり、上記で取得した複数のKanjiYomiListの中でcheckStringに一致するKanjiYomiがあれば、その中の最初にする。
+    // これにより、たとえ、長さが短くとも優先順位の高いものに一致すればそれが採用される。
     return list.stream()
       .map(l->l.stream() // KanjiYomiListストリームについて処理する
         .filter(ky->ky.getYomiFor(checkString).isPresent()) // チェック対象文字列に一致するKanjiYomiだけを流す
         .findFirst() // 最初のものを取得する
       )
       .filter(Optional::isPresent).map(Optional::get) // 存在するものだけをストリームに流す
-      .sorted(Comparator.comparing(KanjiYomi::wholeLength).reversed()) // 長い順にソート
       .findFirst() // 最初のものを選択
       .map(ky-> { // もしあればそれを処理
         // consumeする
