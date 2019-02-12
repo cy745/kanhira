@@ -20,7 +20,7 @@ public class KanjiYomiMapTest {
       "悪名高,あくめいたか,k,4\n" + 
       "悪代官,あくだいかん,,3", map.lookup('悪').get().toString());
     
-    Kanhira kakasi = new Kanhira(map);
+    Kanhira kakasi = new Kanhira(new KanwaDict[] { map });
     assertEquals("あくめいたかくあくめいたかいあくだいかん",
         kakasi.convert("悪名高く悪名高い悪代官"));
     
@@ -34,6 +34,23 @@ public class KanjiYomiMapTest {
     
     assertEquals("あくめいくあくめいたかいあくだいかん",
         kakasi.convert("悪名高く悪名高い悪代官"));
+  }
+  
+  @Test
+  public void test2() {
+    
+    KanjiYomiMap map0 = new KanjiYomiMap();
+    map0.add("悪代官", "あくしろかん");
+    
+    KanjiYomiMap map1 = new KanjiYomiMap();
+    map1.add("悪代官", "あくだいかん");
+    map1.add("悪徳不動産",  "あくとくふどうさん"); 
+        
+    Kanhira kakasi = new Kanhira(new KanwaDict[] { map0, map1 });
+    assertEquals("あくしろかんとあくとくふどうさん", kakasi.convert("悪代官と悪徳不動産"));
+
+    map0.add("悪徳不動産",  "あくとくなふどうさんがいしゃ"); 
+    assertEquals("あくしろかんとあくとくなふどうさんがいしゃ", kakasi.convert("悪代官と悪徳不動産"));
   }
 
 }

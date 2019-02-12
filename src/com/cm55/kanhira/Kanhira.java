@@ -36,13 +36,17 @@ public class Kanhira {
   private static final Converter katakanaConverter = new KatakanaConverter();
   private final Converter kanjiConverter;
   
+  public Kanhira(KanwaDict dict) {
+    this(new KanwaDict[] { dict });
+  }
+    
   /**
    * Constructs a Kakasi object with the specified kanwa dictionary.
    * 
    * @param kanwaDictionary
    *          the KanwaDictionary object.
    */
-  public Kanhira(KanwaDict kanwaDict) {
+  public Kanhira(KanwaDict[]kanwaDict) {
     if (kanwaDict == null) throw new NullPointerException();
     kanjiConverter = new KanjiConverter(kanwaDict);
   }

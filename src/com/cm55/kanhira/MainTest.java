@@ -10,7 +10,8 @@ public class MainTest {
   @Test
   public void test() throws IOException  {
     KanwaDict dict = KakasiDictReader.load("dict/kakasidict");
-    Kanhira kakasi = new Kanhira(dict);
+    
+    Kanhira kakasi = new Kanhira(new KanwaDict[] { dict });
     
     assertEquals(
         "かいがいでのかいにゅうをしゅうりょうし、あめりかぐんをくににきかんさせるというかのせんきょこうやくを、ありがちなごかいがそんざいしているようにみえる。",

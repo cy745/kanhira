@@ -7,6 +7,9 @@ import java.util.stream.*;
 /**
  * Kakasi辞書を読み込み{@link KanjiYomiMap}を取得する。
  * 辞書エラーの場合は、メッセージを標準エラーに出力する。
+ * <p>
+ * 辞書中にある後の方が優先されることに注意。
+ * </p>
  */
 public class KakasiDictReader {
 
