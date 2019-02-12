@@ -31,7 +31,7 @@ class Parsed {
     
     String kanjiConverted = ItaijiTable.getInstance().convert(kanjiInput);
     key = kanjiConverted.charAt(0);
-    kanji = kanjiConverted.substring(1);
+    kanji = kanjiConverted;
     
     YomiOkuri yomiOkuri = new YomiOkuri(yomiInput);
     yomi = convertYomi(yomiOkuri.yomi);

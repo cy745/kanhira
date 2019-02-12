@@ -93,12 +93,6 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     return kanji + "," + yomi + "," + okuriIni.map(o->"" + o).orElse("") + "," + this.wholeLength();
   }
 
-  /**
-   * Gets the kanji string.
-   */
-  public String getKanji() {
-    return kanji;
-  }
 
   /**
    * Gets the yomi string.

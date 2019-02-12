@@ -55,14 +55,14 @@ public class KanjiConverter implements Converter {
 
     // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
     // 異体字を普通字に変換しておく。
-    String checkString = 
-        ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength()));
+    String checkString = key +
+        ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength() - 1));
 
     // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
     Optional<KanjiYomi>opt = kanjiYomiList.stream().filter(ky-> ky.getYomiFor(checkString) != null).findFirst();
     if (opt.isPresent()) {
       // consumeする。1は最初の漢字の分
-      input.consume(1 + opt.get().wholeLength());
+      input.consume(opt.get().wholeLength());
       
       // よみを返す
       return opt.get().getYomiFor(checkString);
