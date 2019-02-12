@@ -47,14 +47,14 @@ public class KanjiConverter implements Converter {
   public Optional<String>convert(Input input) {
 
     //　先頭漢字を取得する。異体字であれば変換しておく
-    char key = ItaijiTable.getInstance().convert((char)input.first());
+    char key = ItaijiTable.convert((char)input.first());
 
     // 先頭漢字用のKanjiYomiListを取得する
     return kanwaDict.lookup(key).map(kanjiYomiList -> {
 
       // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
       // 異体字を普通字に変換しておく。
-      String checkString = key + ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength() - 1));
+      String checkString = key + ItaijiTable.convert(input.read(kanjiYomiList.maxWholeLength() - 1));
 
       // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
       Optional<KanjiYomi> opt = kanjiYomiList.stream().filter(ky -> ky.getYomiFor(checkString).isPresent()).findFirst();

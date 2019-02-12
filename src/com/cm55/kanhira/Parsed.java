@@ -27,29 +27,20 @@ class Parsed {
     }
     
     // 異体字を普通字に変換する。比較の時もあらかじめ異体字が普通字に変換された比較される。    
-    kanji = ItaijiTable.getInstance().convert(kanjiInput);
+    kanji = ItaijiTable.convert(kanjiInput);
     
-    YomiOkuri yomiOkuri = new YomiOkuri(yomiInput);
-    yomi = convertYomi(yomiOkuri.yomi);
-    okurigana = yomiOkuri.okurigana;
-  }
 
-  static class YomiOkuri {
-    final String yomi;
-    final Optional<Character>okurigana;
-    YomiOkuri(String yomiIn) {
-      int yomiLength = yomiIn.length();
-      char yomiLast = yomiIn.charAt(yomiLength - 1);
-      if (CharKind.isOkurigana(yomiLast)) {
-        okurigana = Optional.of(yomiLast);
-        yomi = yomiIn.substring(0, yomiLength - 1);
-        return;
-      }
-      yomi = yomiIn;
-      okurigana = Optional.empty();    
+    int yomiLength = yomiInput.length();
+    char yomiLast = yomiInput.charAt(yomiLength - 1);
+    if (CharKind.isOkurigana(yomiLast)) {
+      okurigana = Optional.of(yomiLast);
+      yomi = convertYomi(yomiInput.substring(0, yomiLength - 1));
+    } else {
+      yomi = convertYomi(yomiInput);
+      okurigana = Optional.empty();  
     }
   }
-  
+
   String convertYomi(String yomi) {
     int yomiLength = yomi.length();
     StringBuffer yomiBuffer = new StringBuffer(yomiLength);

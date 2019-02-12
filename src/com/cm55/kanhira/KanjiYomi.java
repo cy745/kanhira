@@ -35,6 +35,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * 任意の漢字文字列、「悪代官」の場合は「悪代官」が格納される。
    * 「悪巧み」の場合は「悪巧み」、この場合の「み」は送り仮名ではなく漢字の一部。
    * また、「貴ノ花」の場合は「貴ノ花」だが、このようにカタカナがまじる場合もある。
+   * 「悪い」の場合は「悪」のみ。「い」は送り仮名。
    */
   private final String kanji;
   
@@ -127,7 +128,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    */
   public Optional<String>getYomiFor(String target) {
     
-    if (kanjiLength > 0 && !target.startsWith(kanji)) {
+    if (!target.startsWith(kanji)) {
       return Optional.empty();
     }
     
@@ -139,7 +140,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     // 送り仮名がある場合、チェック対称の送り仮名が適当であるか調べ、適当であれば、その文字を加えて返す。
     if (target.length() <= kanjiLength) return Optional.empty();
     char ch = target.charAt(kanjiLength);
-    if (!OkuriganaTable.getInstance().check(ch, okuriIni.get())) return Optional.empty();
+    if (!OkuriganaTable.check(ch, okuriIni.get())) return Optional.empty();
     return Optional.of(yomi + ch);
   }
 
@@ -151,13 +152,12 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * @return true if the objects are the same; false otherwise.
    */
   public boolean equals(Object object) {
-    if (object instanceof KanjiYomi) {
-      KanjiYomi kanjiYomi = (KanjiYomi) object;
-      return hashCode() == kanjiYomi.hashCode()
-          && kanji.equals(kanjiYomi.kanji) && yomi.equals(kanjiYomi.yomi)
-          && okuriIni == kanjiYomi.okuriIni;
-    }
-    return false;
+    if (!(object instanceof KanjiYomi)) return false;
+    KanjiYomi that = (KanjiYomi) object;
+    return this.hashCode() == that.hashCode() && 
+        this.kanji.equals(that.kanji) && 
+        this.yomi.equals(that.yomi) && 
+        this.okuriIni.equals(that.okuriIni);
   }
 
   /**

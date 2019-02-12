@@ -578,31 +578,22 @@ public class ItaijiTable {
   };
   
 
-  /** このクラスの唯一のインスタンス */
-  private static ItaijiTable itaijiTable = new ItaijiTable();
-
-  /** 唯一のインスタンスを得る */
-  public static ItaijiTable getInstance() {
-    return itaijiTable;
-  }
-
   /** 異体字/普通字変換マップ */
-  private final Map<Character, Character> map;
-
-  /** プライベートなコンストラクタ */
-  private ItaijiTable() {
+  private static final Map<Character, Character> map;
+  static {
     map = new HashMap<Character, Character>(TABLE.length / 2);
     for (int i = 0; i < TABLE.length; i += 2) {
       map.put(TABLE[i + 0], TABLE[i + 1]);
     }
   }
 
+
   /**
    * 指定された字を普通字に変換する。指定された字が異体字で無い場合はそのまま帰す。
    * @param input 変換対称の字
    * @return 変換された字、あるいはそのまま。
    */
-  public char convert(char input) {
+  public static char convert(char input) {
     Character output = map.get(input);
     if (output != null) return output;
     return input;
@@ -613,7 +604,7 @@ public class ItaijiTable {
    * @param input 変換対称文字列
    * @return
    */
-  public String convert(String input) {
+  public static String convert(String input) {
     char[]chars = input.toCharArray();
     for (int i = 0; i < chars.length; i++) {
       chars[i] = convert(chars[i]);

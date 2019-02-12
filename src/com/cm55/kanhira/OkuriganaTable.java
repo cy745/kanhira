@@ -9,11 +9,7 @@ import java.util.*;
  * @author admin
  */
 public class OkuriganaTable {
-  
-  /** 唯一のインスタンスを取得する */
-  public static OkuriganaTable getInstance() {
-    return instance;
-  }
+
   
   /**
    * チェック対称の文字が送り仮名として適当であるかを調べる。
@@ -21,7 +17,7 @@ public class OkuriganaTable {
    * @param okurigana 送り仮名マーク
    * @return true:適当、false:不適当
    */
-  public boolean check(char target, char okurigana) {
+  public static boolean check(char target, char okurigana) {
     
     // その文字を送り仮名テーブルで探す。なければ不適当な送り仮名
     String okuriganaList = map.get(target);
@@ -122,14 +118,11 @@ public class OkuriganaTable {
     'ヶ', "k", // 30f6
   };
   
-  private final Map<Character, String> map = 
-      new HashMap<Character, String>();
-  
-  private OkuriganaTable() {
+  private static final Map<Character, String> map = new HashMap<>();
+  static {
     for (int i = 0; i < TABLE.length; i += 2) {
       map.put((Character)TABLE[i + 0], (String)TABLE[i + 1]);
-    }
+    }    
   }
 
-  private static OkuriganaTable instance = new OkuriganaTable();
 }
