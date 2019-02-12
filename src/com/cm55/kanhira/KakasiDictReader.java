@@ -80,7 +80,7 @@ public class KakasiDictReader {
       }
       char okurigana = '\u0000';
       char yomiLast = yomiBuffer.charAt(index - 1);
-      if (yomiLast >= 'a' && yomiLast <= 'z') {
+      if (CharKind.isOkurigana(yomiLast)) {
         okurigana = yomiLast;
         yomiBuffer.setLength(index - 1);
       }

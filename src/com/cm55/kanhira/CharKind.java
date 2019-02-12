@@ -6,7 +6,7 @@ package com.cm55.kanhira;
  */
 public class CharKind {
 
-  public static boolean isLowerAlphabet(char c) {
+  public static boolean isOkurigana(char c) {
     return 'a' <= c && c <= 'z';
   }
   
