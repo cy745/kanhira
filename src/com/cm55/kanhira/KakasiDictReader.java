@@ -2,6 +2,7 @@ package com.cm55.kanhira;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * This class represents the Kanwa dictionary.
@@ -57,83 +58,57 @@ public class KakasiDictReader {
       if (line == null) {
         break;
       }
-      int length = line.length();
-      if (length == 0) {
-        continue;
-      }
-      Character.UnicodeBlock yomiBlock = Character.UnicodeBlock.of(line.charAt(0));
-      if (!yomiBlock.equals(Character.UnicodeBlock.HIRAGANA) && !yomiBlock.equals(Character.UnicodeBlock.KATAKANA)) {
-        continue;
-      }
-      StringBuffer yomiBuffer = new StringBuffer();
-      yomiBuffer.append(line.charAt(0));
-      int index = 1;
-      for (; index < length; index++) {
-        char ch = line.charAt(index);
-        if (" ,\t".indexOf(ch) >= 0) {
-          break;
-        }
-        yomiBuffer.append(ch);
-      }
-      if (index >= length) {
-        System.err.println("KanwaDictionary: Ignored line: " + line);
-        continue;
-      }
-      Optional<Character>okurigana = Optional.empty();
-      char yomiLast = yomiBuffer.charAt(index - 1);
-      if (CharKind.isOkurigana(yomiLast)) {
-        okurigana = Optional.of(yomiLast);
-        yomiBuffer.setLength(index - 1);
-      }
-      String yomi = yomiBuffer.toString();
-      for (++index; index < length; index++) {
-        char ch = line.charAt(index);
-        if (" ,\t".indexOf(ch) < 0) {
-          break;
-        }
-      }
-      if (index >= length) {
-        System.err.println("KanwaDictionary: Ignored line: " + line);
-        continue;
-      }
-      if (line.charAt(index) == '/') {
-        SKK_LOOP: while (true) {
-          StringBuffer kanji = new StringBuffer();
-          for (++index; index < length; index++) {
-            char ch = line.charAt(index);
-            if (ch == '/') {
-              break;
-            }
-            if (ch == ';') {
-              index = length - 1;
-              break;
-            }
-            if (ch == '[') {
-              break SKK_LOOP;
-            }
-            kanji.append(ch);
-          }
-          if (index >= length) {
-            break;
-          }
-          addItem(map, kanji.toString(), yomi, okurigana);
-        }
-      } else {
-        StringBuffer kanji = new StringBuffer();
-        kanji.append(line.charAt(index));
-        for (++index; index < length; index++) {
-          char ch = line.charAt(index);
-          if (" ,\t".indexOf(ch) >= 0) {
-            break;
-          }
-          kanji.append(ch);
-        }
-        addItem(map, kanji.toString(), yomi, okurigana);
-      }
+      addLine(map, line);
     }
     return map;
   }
 
+  static void addLine(KanjiYomiMap map, String line) {
+    int length = line.length();
+    if (length == 0) {
+      return;
+    }
+    Character.UnicodeBlock yomiBlock = Character.UnicodeBlock.of(line.charAt(0));
+    if (!yomiBlock.equals(Character.UnicodeBlock.HIRAGANA) && !yomiBlock.equals(Character.UnicodeBlock.KATAKANA)) {
+      return;
+    }
+    
+    String[]splited =
+        Arrays.stream(line.split("[ ,\t]")).filter(s->s.length() > 0)
+        .collect(Collectors.toList()).toArray(new String[0]);
+    if (splited.length < 2) {
+      System.err.println("KanwaDictionary: Ignored line: " + line);
+      return;
+    }
+    String kanji = splited[1];
+    String yomi = splited[0];
+    
+    // 行の先頭によみがあり、それは空白、カンマ、タブのいずれかで区切られている。
+    YomiOkuri yomiOkuri = new YomiOkuri(yomi);
+    try {
+      addItem(map, kanji, yomiOkuri.yomi, yomiOkuri.okurigana);   
+ //     map.add(kanji.charAt(0),  kanjiYomi);
+    } catch (IllegalArgumentException ex) {
+      System.err.println("KanwaDictionary:" + ex.getMessage());
+    }
+  }
+  
+  static class YomiOkuri {
+    final String yomi;
+    final Optional<Character>okurigana;
+    YomiOkuri(String yomiIn) {
+      int yomiLength = yomiIn.length();
+      char yomiLast = yomiIn.charAt(yomiLength - 1);
+      if (CharKind.isOkurigana(yomiLast)) {
+        okurigana = Optional.of(yomiLast);
+        yomi = yomiIn.substring(0, yomiLength - 1);
+        return;
+      }
+      yomi = yomiIn;
+      okurigana = Optional.empty();
+    }
+  }
+  
   /*
    * (non-Javadoc)
    * 
@@ -141,33 +116,35 @@ public class KakasiDictReader {
    * char)
    */
   static void addItem(KanjiYomiMap map, String kanji, String yomi, Optional<Character>okurigana) {
+    
+    // 漢字の先頭文字を調べる
     Character.UnicodeBlock kanjiBlock = Character.UnicodeBlock.of(kanji.charAt(0));
     if (!kanjiBlock.equals(Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
-      // System.err.println("KanwaDictionary: Ignored item:" +
-      // " kanji=" + kanji + " yomi=" + yomi);
-      return;
+      throw new IllegalArgumentException("First character not Kanji:" + kanji);
     }
+    
     int kanjiLength = kanji.length();
     StringBuffer kanjiBuffer = new StringBuffer(kanjiLength);
-    /*
-     * for (int index = 0; index < kanjiLength; index++) { char ch =
-     * kanji.charAt(index); //if (ch < '\u0100') { //
-     * System.err.println("KanwaDictionary: Ignored item:" + // " kanji=" +
-     * kanji + " yomi=" + yomi); // return; //}
-     * kanjiBuffer.append(ItaijiTable.getInstance().get(ch)); }
-     */
+
     kanjiBuffer.append(ItaijiTable.getInstance().convert(kanji));
     Character key = new Character(kanjiBuffer.charAt(0));
+
     kanji = kanjiBuffer.substring(1);
 
+
+    yomi = convertYomi(yomi);
+
+    map.add(key, new KanjiYomi(kanji, yomi, okurigana));
+  }
+
+  static String convertYomi(String yomi) {
     int yomiLength = yomi.length();
     StringBuffer yomiBuffer = new StringBuffer(yomiLength);
-    for (int index = 0; index < yomiLength; index++) {
-      char ch = yomi.charAt(index);
+    
+    for (char ch: yomi.toCharArray()) {
       Character.UnicodeBlock block = Character.UnicodeBlock.of(ch);
       if (!block.equals(Character.UnicodeBlock.HIRAGANA) && !block.equals(Character.UnicodeBlock.KATAKANA)) {
-        System.err.println("KanwaDictionary: Ignored item:" + " kanji=" + kanjiBuffer + " yomi=" + yomi);
-        return;
+        throw new IllegalArgumentException("Not Hiragana or Katakana:" + yomi);
       }
       if ((ch >= '\u30a1' && ch <= '\u30f3') || ch == '\u30fd' || ch == '\u30fe') {
         yomiBuffer.append((char) (ch - 0x60));
@@ -178,9 +155,7 @@ public class KakasiDictReader {
         yomiBuffer.append(ch);
       }
     }
-    yomi = yomiBuffer.toString();
-
-    map.add(key,  new KanjiYomi(kanji, yomi, okurigana));
+    return yomiBuffer.toString();
+    
   }
-
 }

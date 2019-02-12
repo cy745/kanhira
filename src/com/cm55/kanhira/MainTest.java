@@ -25,5 +25,8 @@ public class MainTest {
 
     // ※送り仮名は全角ひらがなであること
     assertEquals("あくこうみによって", kakasi.convert("悪巧ミによって"));
+    
+    // 異体字
+    assertEquals("てつお", kakasi.convert("鐡男"));
   }
 }
