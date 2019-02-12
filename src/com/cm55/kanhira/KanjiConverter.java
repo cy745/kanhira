@@ -18,6 +18,7 @@
 package com.cm55.kanhira;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * This class implements conversion methods that converts a Kanji word.
@@ -28,12 +29,12 @@ import java.util.*;
 public class KanjiConverter implements Converter {
 
   /** 漢字辞書 */
-  private final KanwaDict kanwaDict;
+  private final KanwaDict[]kanwaDict;
 
   /**
    * 使用する漢字辞書を指定する
    */
-  public KanjiConverter(KanwaDict kanwaDict) {
+  public KanjiConverter(KanwaDict[] kanwaDict) {
     this.kanwaDict = kanwaDict;
   }
 
@@ -48,27 +49,36 @@ public class KanjiConverter implements Converter {
 
     //　先頭漢字を取得する。異体字であれば変換しておく
     char key = ItaijiTable.convert((char)input.first());
+    
+    // 先頭漢字用のKanjiYomiListのリストを取得する。これは優先順位順になる。
+    List<KanjiYomiList> list = Arrays.stream(kanwaDict)
+        .map(dict->dict.lookup(key))
+        .filter(Optional::isPresent).map(Optional::get)
+        .collect(Collectors.toList());
+    if (list.size() == 0) return Optional.empty();
 
-    // 先頭漢字用のKanjiYomiListを取得する
-    return kanwaDict.lookup(key).map(kanjiYomiList -> {
+    // 複数のKanjiYomiListの最大文字列長の最大値を先読み文字数とする
+    int readAHead = list.stream().mapToInt(l->l.maxWholeLength()).max().getAsInt();
 
-      // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
-      // 異体字を普通字に変換しておく。
-      String checkString = key + ItaijiTable.convert(input.read(kanjiYomiList.maxWholeLength() - 1));
+    // 先読みを行いチェック文字列を作成。先頭文字は読み込み済なので一文字減らす。
+    String checkString = key + ItaijiTable.convert(input.read(readAHead - 1));
 
-      // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
-      Optional<KanjiYomi> opt = kanjiYomiList.stream().filter(ky -> ky.getYomiFor(checkString).isPresent()).findFirst();
-      if (opt.isPresent()) {
-        // consumeする。1は最初の漢字の分
-        input.consume(opt.get().wholeLength());
+    // 各KanjiYomiListについて、最初に一致する複数のKanjiYomiオブジェクトの中の最初のものを取得する
+    // つまり、上記で取得した複数のKanjiYomiListの中でcheckStringに一致するKanjiYomiがあれば、その中の最初にする。
+    // これにより、たとえ、長さが短くとも優先順位の高いものに一致すればそれが採用される。
+    return list.stream()
+      .map(l->l.stream() // KanjiYomiListストリームについて処理する
+        .filter(ky->ky.getYomiFor(checkString).isPresent()) // チェック対象文字列に一致するKanjiYomiだけを流す
+        .findFirst() // 最初のものを取得する
+      )
+      .filter(Optional::isPresent).map(Optional::get) // 存在するものだけをストリームに流す
+      .findFirst() // 最初のものを選択
+      .map(ky-> { // もしあればそれを処理
+        // consumeする
+        input.consume(ky.wholeLength());
 
         // よみを返す
-        return opt.get().getYomiFor(checkString);
-      }
-
-      // 変換されなかった。
-      return Optional.<String>empty();
-      
-    }).orElse(Optional.<String>empty());
+        return ky.getYomiFor(checkString);
+      }).orElse(Optional.empty());
   }
 }

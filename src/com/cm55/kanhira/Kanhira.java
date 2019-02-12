@@ -36,15 +36,20 @@ public class Kanhira {
   private static final Converter katakanaConverter = new KatakanaConverter();
   private final Converter kanjiConverter;
   
+  public Kanhira(KanwaDict dict) {
+    this(new KanwaDict[] { dict });
+  }
+    
   /**
-   * Constructs a Kakasi object with the specified kanwa dictionary.
-   * 
-   * @param kanwaDictionary
-   *          the KanwaDictionary object.
+   * 複数の辞書を指定する。
+   * 配列中の先の方が優先順位が高い。つまり、dicts[0]はdicts[1]よりも先に評価される。
+   * この意味としては、たとえ「悪徳不動産」を検索する場合、たとえdicts[1]に"悪徳不動産"が定義されていても、
+   * dicts[0]に"悪徳"が定義されていれば、そちらが採用される。
+   * @param dicts
    */
-  public Kanhira(KanwaDict kanwaDict) {
-    if (kanwaDict == null) throw new NullPointerException();
-    kanjiConverter = new KanjiConverter(kanwaDict);
+  public Kanhira(KanwaDict[]dicts) {
+    if (dicts == null) throw new NullPointerException();
+    kanjiConverter = new KanjiConverter(dicts);
   }
 
   /**
