@@ -10,15 +10,15 @@ public class KanjiYomiMap implements KanwaDict {
 
   /**
    * 漢字とそのよみを登録する。
-   * 送り仮名の無い倍には"悪代官", "あくだいかん"のように登録すればよいが、送り仮名の
+   * 送り仮名の無い場合には"悪代官", "あくだいかん"のように登録すればよいが、送り仮名の
    * ある場合にはそれを半角小文字アルファベットにする必要がある。
    * 例えば、"悪名高い"の場合には"あくめいたかi"
    * @param kanji 漢字。例えば"悪名高"
    * @param yomi よみ。例えば"あくめいたかi"
    */
   public void add(String kanji, String yomi) {
-    char kanjiKey = kanji.charAt(0);        
-    add(kanjiKey, KanjiYomi.create(kanji, yomi));
+    Parsed p = new Parsed(kanji, yomi);
+    add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana));
   }
 
   

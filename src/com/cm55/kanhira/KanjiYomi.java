@@ -52,27 +52,6 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   
   /** ハッシュ値 */
   private final int hashCode;
-
-  /**
-   * 漢字と送り仮名を含む読みから作成する
-   * 
-   * @param kanji 最初の文字を除いた漢字部分。「悪名高い」の場合は、送り仮名も除いて「名高」になる。
-   * 実際には送り仮名で無い「かな」や「カナ」も含まれる。例えば、「悪巧み」の「み」は送り仮名ではない。
-   * 「貴ノ花」には「カナ」が含まれる。
-   * @param yomi よみ。上の場合は「あくめいたかi」になる。
-   */
-  public static KanjiYomi create(String kanji, String yomi) {
-    String kanjiBody = kanji.substring(1);
-    int yomiLength = yomi.length();
-    char okurigana = yomi.charAt(yomiLength - 1);
-    
-    if (CharKind.isOkurigana(okurigana)) {
-      return new KanjiYomi(kanjiBody, yomi.substring(0, yomiLength - 1), 
-          Optional.of(okurigana)); 
-    }
-    
-    return new KanjiYomi(kanjiBody, yomi, Optional.empty());
-  }
   
   /**
    * Constructs a KanjiYomi object.
