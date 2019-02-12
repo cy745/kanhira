@@ -50,26 +50,20 @@ public class KakasiDictReader {
         String line = in.readLine();
         if (line == null) break;
         if (line.length() == 0 || line.startsWith(";")) continue;
-        parseLine(line).ifPresent(p->map.add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana)));
+        String[]fields =
+            Arrays.stream(line.split("[ ,\t]")).filter(s->s.length() > 0)
+            .collect(Collectors.toList()).toArray(new String[0]);
+        if (fields.length < 2) {
+          System.err.println("KanwaDictionary: Ignored line: " + line);
+          continue;
+        }
+        try {
+          map.add(fields[1], fields[0]);
+        } catch (Exception ex) {
+          System.err.println("KanwaDictionary:" + ex.getMessage());
+        }
       }
       return map;
     }    
-  }
-
-  /** 行を解析する。登録可能であれば{@link Parsed}を返す。不可能であれば空 */
-  static Optional<Parsed>parseLine(String line) {    
-    String[]fields =
-        Arrays.stream(line.split("[ ,\t]")).filter(s->s.length() > 0)
-        .collect(Collectors.toList()).toArray(new String[0]);
-    if (fields.length < 2) {
-      System.err.println("KanwaDictionary: Ignored line: " + line);
-      return Optional.empty();
-    }
-    try {
-      return Optional.of(new Parsed(fields[1], fields[0]));
-    } catch (Exception ex) {
-      System.err.println("KanwaDictionary:" + ex.getMessage());
-      return Optional.empty();
-    }
   }
 }

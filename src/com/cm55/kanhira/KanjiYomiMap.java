@@ -5,8 +5,7 @@ import java.util.stream.*;
 
 public class KanjiYomiMap implements KanwaDict {
 
-  private Map<Character, KanjiYomiList>map = 
-      new HashMap<Character, KanjiYomiList>(8192);
+  private Map<Character, KanjiYomiList>map = new HashMap<>();
 
   /**
    * 漢字とそのよみを登録する。
@@ -46,7 +45,7 @@ public class KanjiYomiMap implements KanwaDict {
    * @param key '悪名高い'の場合は'悪'
    * @param kanjiYomi 上記漢字の残りの部分の読みがな。{@link KanjiYomi}を参照のこと。
    */
-  public void add(char key, KanjiYomi kanjiYomi) {
+  private void add(char key, KanjiYomi kanjiYomi) {
     KanjiYomiList list = map.get(key);
     if (list == null) {
       list = new KanjiYomiList();
