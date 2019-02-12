@@ -17,7 +17,10 @@ import java.util.stream.*;
  */
 public class KanjiYomiList  {
 
-  
+  /**
+   * この{@link TreeSet}は{@link KanjiYomi#compareTo(KanjiYomi)}によって順序付けられる。
+   * {@link KanjiYomi}はその{@link KanjiYomi#wholeLength()}の逆順に順序付けされる。
+   */
   private TreeSet<KanjiYomi>list = new TreeSet<>();
 
   /** このリストに含まれる{@link KanjiYomi}の{@link KanjiYomi#wholeLength()}のうちの最大長 */

@@ -1,5 +1,7 @@
 package com.cm55.kanhira;
 
+import java.util.*;
+
 /*
  * $Id: KanjiYomi.java,v 1.5 2003/01/01 08:18:44 kawao Exp $
  *
@@ -41,7 +43,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   /** 
    * 送り仮名が無い場合は(char)0、ある場合はそのイニシャルの半角アルファベット小文字。
    * 例えば「悪い」の場合は「i」が格納される   */
-  private final char okuriIni;
+  private final Optional<Character> okuriIni;
   
   /** 
    * 漢字部分の長さ、「悪代官」の場合は「代官」で2、「悪い」の場合は送り仮名を含まずに0。
@@ -65,10 +67,11 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     char okurigana = yomi.charAt(yomiLength - 1);
     
     if (CharKind.isOkurigana(okurigana)) {
-      return new KanjiYomi(kanjiBody, yomi.substring(0, yomiLength - 1), okurigana); 
+      return new KanjiYomi(kanjiBody, yomi.substring(0, yomiLength - 1), 
+          Optional.of(okurigana)); 
     }
     
-    return new KanjiYomi(kanjiBody, yomi, (char)0);
+    return new KanjiYomi(kanjiBody, yomi, Optional.empty());
   }
   
   /**
@@ -80,22 +83,22 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * @param yomi よみ。上の場合は「あくめいたか」になる。
    * @param okurigana　送り仮名がなければ(char)0、あれば上の場合は'i'になる。
    */
-  public KanjiYomi(String kanji, String yomi, char okuriIni) {
+  public KanjiYomi(String kanji, String yomi, Optional<Character>okuriIni) {
     
     // kanjiは、実際にはどのような文字種でもよい。
     
     if (!CharKind.isHiragana(yomi)) 
       throw new IllegalArgumentException("illegal yomi " + yomi);
-    if (okuriIni != 0) {
-      if (!CharKind.isOkurigana((char)okuriIni))
+    okuriIni.ifPresent(okuri-> {
+      if (!CharKind.isOkurigana((char)okuri))
         throw new IllegalArgumentException("illgal okuriIni");
-    }
+    });
         
     this.kanji = kanji;
     this.yomi = yomi;
     this.okuriIni = okuriIni;
     kanjiLength = kanji.length();
-    hashCode = kanji.hashCode() ^ yomi.hashCode() ^ (int) okuriIni;
+    hashCode = kanji.hashCode() ^ yomi.hashCode() ^ (int) okuriIni.map(o->(int)o).orElse(0);
     
     // このオブジェクトの生成順を保持するらしい
     synchronized (LOCK) {
@@ -108,7 +111,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    */
   @Override
   public String toString() {
-    return kanji + "," + yomi + "," + okuriIni + "," + this.wholeLength();
+    return kanji + "," + yomi + "," + okuriIni.map(o->"" + o).orElse("") + "," + this.wholeLength();
   }
 
   /**
@@ -128,7 +131,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   /**
    * Gets the okurigana character.
    */
-  public char getOkuriIni() {
+  public Optional<Character> getOkuriIni() {
     return okuriIni;
   }
 
@@ -138,7 +141,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * 「悪代官」の場合は「代官」で2になる。
    */
   public int wholeLength() {
-    return kanjiLength + (okuriIni > 0 ? 1 : 0);
+    return kanjiLength + okuriIni.map(o->1).orElse(0);
   }
 
   /**
@@ -156,14 +159,14 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     }
     
     // 送り仮名が無い場合、yomiをそのまま帰す。
-    if (okuriIni == 0) {
+    if (!okuriIni.isPresent()) {
       return yomi;
     }
 
     // 送り仮名がある場合、チェック対称の送り仮名が適当であるか調べ、適当であれば、その文字を加えて返す。
     if (target.length() <= kanjiLength) return null;
     char ch = target.charAt(kanjiLength);
-    if (!OkuriganaTable.getInstance().check(ch, okuriIni)) return null;
+    if (!OkuriganaTable.getInstance().check(ch, okuriIni.get())) return null;
     return yomi + ch;
   }
 

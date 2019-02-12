@@ -1,6 +1,7 @@
 package com.cm55.kanhira;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * This class represents the Kanwa dictionary.
@@ -78,10 +79,10 @@ public class KakasiDictReader {
         System.err.println("KanwaDictionary: Ignored line: " + line);
         continue;
       }
-      char okurigana = '\u0000';
+      Optional<Character>okurigana = Optional.empty();
       char yomiLast = yomiBuffer.charAt(index - 1);
       if (CharKind.isOkurigana(yomiLast)) {
-        okurigana = yomiLast;
+        okurigana = Optional.of(yomiLast);
         yomiBuffer.setLength(index - 1);
       }
       String yomi = yomiBuffer.toString();
@@ -139,7 +140,7 @@ public class KakasiDictReader {
    * @see com.kawao.kakasi.KanwaDict#addItem(java.lang.String, java.lang.String,
    * char)
    */
-  static void addItem(KanjiYomiMap map, String kanji, String yomi, char okurigana) {
+  static void addItem(KanjiYomiMap map, String kanji, String yomi, Optional<Character>okurigana) {
     Character.UnicodeBlock kanjiBlock = Character.UnicodeBlock.of(kanji.charAt(0));
     if (!kanjiBlock.equals(Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
       // System.err.println("KanwaDictionary: Ignored item:" +
