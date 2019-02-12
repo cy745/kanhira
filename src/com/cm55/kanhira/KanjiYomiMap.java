@@ -18,7 +18,23 @@ public class KanjiYomiMap implements KanwaDict {
    */
   public void add(String kanji, String yomi) {
     Parsed p = new Parsed(kanji, yomi);
-    add(p.kanji.charAt(0), new KanjiYomi(p.kanji, p.yomi, p.okurigana));
+    add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana));
+  }
+  
+  /**
+   * 指定された登録を削除する。
+   * 漢字だけではなく、よみも必要。
+   * 例えば、同一の漢字でも「悪名高：あくめいたかi」、「悪名高：あくめいたかk」などと複数登録されていることがある。
+   * @param kanji 漢字
+   * @param yomi よみ
+   * @return
+   */
+  public boolean remove(String kanji, String yomi) {
+    Parsed p = new Parsed(kanji, yomi);
+    KanjiYomiList list = map.get(p.key);
+    if (list == null) return false;
+    KanjiYomi kanjiYomi = new KanjiYomi(p.kanji, p.yomi, p.okurigana);
+    return list.remove(kanjiYomi);    
   }
 
   

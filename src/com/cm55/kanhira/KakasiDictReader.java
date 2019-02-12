@@ -50,7 +50,7 @@ public class KakasiDictReader {
         String line = in.readLine();
         if (line == null) break;
         if (line.length() == 0 || line.startsWith(";")) continue;
-        parseLine(line).ifPresent(p->map.add(p.kanji.charAt(0), new KanjiYomi(p.kanji, p.yomi, p.okurigana)));
+        parseLine(line).ifPresent(p->map.add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana)));
       }
       return map;
     }    

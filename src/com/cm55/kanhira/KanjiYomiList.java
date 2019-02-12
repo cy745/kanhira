@@ -32,12 +32,8 @@ public class KanjiYomiList  {
     maxWholeLength = null;
   }
   
-  public List<KanjiYomi>getList() {
-    return new ArrayList<KanjiYomi>(list);
-  }
-  
-  public void setList(Collection<KanjiYomi>list) {
-    this.list = new TreeSet<KanjiYomi>(list);
+  public boolean remove(KanjiYomi kanjiYomi) {
+    return list.remove(kanjiYomi);    
   }
 
   /**

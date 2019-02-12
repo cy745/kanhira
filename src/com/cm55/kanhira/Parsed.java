@@ -10,7 +10,10 @@ import java.util.*;
  */
 class Parsed {
 
-  /** 漢字二文字目以降 */
+  /** 漢字一文字目 */
+  final char key;
+  
+  /** 漢字全体 */
   final String kanji;
   
   /** よみ */
@@ -28,7 +31,7 @@ class Parsed {
     
     // 異体字を普通字に変換する。比較の時もあらかじめ異体字が普通字に変換された比較される。    
     kanji = ItaijiTable.convert(kanjiInput);
-    
+    key = kanji.charAt(0);
 
     int yomiLength = yomiInput.length();
     char yomiLast = yomiInput.charAt(yomiLength - 1);
