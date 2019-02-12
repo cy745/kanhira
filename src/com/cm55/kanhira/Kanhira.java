@@ -18,6 +18,7 @@
 package com.cm55.kanhira;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * This class is the KAKASI/JAVA main class.
@@ -42,7 +43,7 @@ public class Kanhira {
    *          the KanwaDictionary object.
    */
   public Kanhira(KanwaDict kanwaDict) {
-    assert kanwaDict != null;
+    if (kanwaDict == null) throw new NullPointerException();
     kanjiConverter = new KanjiConverter(kanwaDict);
   }
 
@@ -59,11 +60,11 @@ public class Kanhira {
       if (ch < 0) {
         break;
       }
-      String converted = getConverter((char)ch).convert(input);
-      if (converted == null) {
-        input.consume(1);
+      Optional<String>converted = getConverter((char)ch).convert(input);
+      if (converted.isPresent()) {
+        s.append(converted.get());        
       } else {
-        s.append(converted);
+        input.consume(1);
       }
     }
     return s.toString();

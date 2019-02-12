@@ -10,9 +10,6 @@ import java.util.*;
  */
 class Parsed {
 
-  /** 漢字先頭の一文字 */
-  final char key;
-  
   /** 漢字二文字目以降 */
   final String kanji;
   
@@ -29,9 +26,8 @@ class Parsed {
       throw new IllegalArgumentException("First character not Kanji:" + kanjiInput);
     }
     
-    String kanjiConverted = ItaijiTable.getInstance().convert(kanjiInput);
-    key = kanjiConverted.charAt(0);
-    kanji = kanjiConverted;
+    // 異体字を普通字に変換する。比較の時もあらかじめ異体字が普通字に変換された比較される。    
+    kanji = ItaijiTable.getInstance().convert(kanjiInput);
     
     YomiOkuri yomiOkuri = new YomiOkuri(yomiInput);
     yomi = convertYomi(yomiOkuri.yomi);

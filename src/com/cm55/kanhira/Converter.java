@@ -18,6 +18,7 @@
 package com.cm55.kanhira;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * An object that implements the Converter interface can convert a string.
@@ -39,7 +40,7 @@ public interface Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  String convert(Input input);
+  Optional<String>convert(Input input);
 
   /**
    * 文字列入力インターフェース

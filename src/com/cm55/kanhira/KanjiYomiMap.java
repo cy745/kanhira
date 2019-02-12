@@ -18,7 +18,7 @@ public class KanjiYomiMap implements KanwaDict {
    */
   public void add(String kanji, String yomi) {
     Parsed p = new Parsed(kanji, yomi);
-    add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana));
+    add(p.kanji.charAt(0), new KanjiYomi(p.kanji, p.yomi, p.okurigana));
   }
 
   
@@ -37,8 +37,8 @@ public class KanjiYomiMap implements KanwaDict {
   }
 
   @Override
-  public KanjiYomiList lookup(char k) {
-    return map.get(k);
+  public Optional<KanjiYomiList>lookup(char k) {
+    return Optional.ofNullable(map.get(k));
   }
 
   public Stream<Map.Entry<Character, KanjiYomiList>>stream() {

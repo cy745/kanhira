@@ -32,22 +32,23 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   private final long objectIndex;
 
   /** 
-   * 漢字、最初の文字を除いた部分、「悪代官」の場合は「代官」が格納される。
-   * 「悪巧み」の場合は「巧み」、この場合の「み」は送り仮名ではなく漢字の一部。
-   * また、「貴ノ花」の場合は「ノ花」だが、このようにカタカナがまじる場合もある。 */
+   * 任意の漢字文字列、「悪代官」の場合は「悪代官」が格納される。
+   * 「悪巧み」の場合は「悪巧み」、この場合の「み」は送り仮名ではなく漢字の一部。
+   * また、「貴ノ花」の場合は「貴ノ花」だが、このようにカタカナがまじる場合もある。
+   */
   private final String kanji;
   
   /** よみ、上の例の場合、最初の文字分を含む「あくだいかん」が格納される。 */
   private final String yomi;
   
   /** 
-   * 送り仮名が無い場合は(char)0、ある場合はそのイニシャルの半角アルファベット小文字。
+   * 送り仮名が無い場合は空、ある場合はそのイニシャルの半角アルファベット小文字。
    * 例えば「悪い」の場合は「i」が格納される   */
   private final Optional<Character> okuriIni;
   
   /** 
-   * 漢字部分の長さ、「悪代官」の場合は「代官」で2、「悪い」の場合は送り仮名を含まずに0。
-   * 「悪巧み」の場合は「巧み」で2、この場合の「み」は送り仮名ではない。 */
+   * 漢字部分の長さ、「悪代官」の場合は「悪代官」で3、「悪い」の場合は送り仮名を含まずに1。
+   * 「悪巧み」の場合は「悪巧み」で3、この場合の「み」は送り仮名ではない。 */
   private final int kanjiLength;
   
   /** ハッシュ値 */
@@ -56,11 +57,11 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
   /**
    * Constructs a KanjiYomi object.
    * 
-   * @param kanji 最初の文字を除いた漢字部分。「悪名高い」の場合は、送り仮名も除いて「名高」になる。
+   * @param kanji 漢字部分。「悪名高い」の場合は、送り仮名を除いて「悪名高」になる。
    * 実際には送り仮名で無い「かな」や「カナ」も含まれる。例えば、「悪巧み」の「み」は送り仮名ではない。
    * 「貴ノ花」には「カナ」が含まれる。
    * @param yomi よみ。上の場合は「あくめいたか」になる。
-   * @param okurigana　送り仮名がなければ(char)0、あれば上の場合は'i'になる。
+   * @param okurigana　送り仮名がなければ空、あれば上の場合は'i'になる。
    */
   public KanjiYomi(String kanji, String yomi, Optional<Character>okuriIni) {
     
@@ -110,8 +111,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
 
   /**
    *　漢字部分の長さと送り仮名の長さを和を返す。
-   * ただし、漢字部分としては、最初の漢字を除いた残りの部分。
-   * 「悪代官」の場合は「代官」で2になる。
+   * 「悪名高」「あくめいたかi」の場合は「悪名高」 + 「i]で4になる。
    */
   public int wholeLength() {
     return kanjiLength + okuriIni.map(o->1).orElse(0);
@@ -125,30 +125,22 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
    * @param target　チェック対象文字列
    * @return よみ文字列
    */
-  private String doGetYomiFor(String target) {
+  public Optional<String>getYomiFor(String target) {
     
     if (kanjiLength > 0 && !target.startsWith(kanji)) {
-      return null;
+      return Optional.empty();
     }
     
     // 送り仮名が無い場合、yomiをそのまま帰す。
     if (!okuriIni.isPresent()) {
-      return yomi;
+      return Optional.of(yomi);
     }
 
     // 送り仮名がある場合、チェック対称の送り仮名が適当であるか調べ、適当であれば、その文字を加えて返す。
-    if (target.length() <= kanjiLength) return null;
+    if (target.length() <= kanjiLength) return Optional.empty();
     char ch = target.charAt(kanjiLength);
-    if (!OkuriganaTable.getInstance().check(ch, okuriIni.get())) return null;
-    return yomi + ch;
-  }
-
-  public String getYomiFor(String target) {
-    String result = doGetYomiFor(target);
-    if (result == null)
-      return null;
-    //ystem.out.println("" + target + "..." + result);
-    return result;
+    if (!OkuriganaTable.getInstance().check(ch, okuriIni.get())) return Optional.empty();
+    return Optional.of(yomi + ch);
   }
 
   /**

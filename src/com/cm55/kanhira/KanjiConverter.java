@@ -44,31 +44,31 @@ public class KanjiConverter implements Converter {
    * @param output 結果出力
    * @return true:変換が行われた。false:変換は行われなかった。
    */
-  public String convert(Input input) {
+  public Optional<String>convert(Input input) {
 
     //　先頭漢字を取得する。異体字であれば変換しておく
     char key = ItaijiTable.getInstance().convert((char)input.first());
 
     // 先頭漢字用のKanjiYomiListを取得する
-    KanjiYomiList kanjiYomiList = kanwaDict.lookup(key);
-    if (kanjiYomiList == null) return null;
+    return kanwaDict.lookup(key).map(kanjiYomiList -> {
 
-    // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
-    // 異体字を普通字に変換しておく。
-    String checkString = key +
-        ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength() - 1));
+      // KanjiYomiListの最大長を取得し、それをチェック用文字列とする。これは先頭漢字以外の分
+      // 異体字を普通字に変換しておく。
+      String checkString = key + ItaijiTable.getInstance().convert(input.read(kanjiYomiList.maxWholeLength() - 1));
 
-    // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
-    Optional<KanjiYomi>opt = kanjiYomiList.stream().filter(ky-> ky.getYomiFor(checkString) != null).findFirst();
-    if (opt.isPresent()) {
-      // consumeする。1は最初の漢字の分
-      input.consume(opt.get().wholeLength());
+      // KanjiYomiListは長い順にされているので、最長一致のために順に比較していく
+      Optional<KanjiYomi> opt = kanjiYomiList.stream().filter(ky -> ky.getYomiFor(checkString).isPresent()).findFirst();
+      if (opt.isPresent()) {
+        // consumeする。1は最初の漢字の分
+        input.consume(opt.get().wholeLength());
+
+        // よみを返す
+        return opt.get().getYomiFor(checkString);
+      }
+
+      // 変換されなかった。
+      return Optional.<String>empty();
       
-      // よみを返す
-      return opt.get().getYomiFor(checkString);
-    }
-    
-    // 変換されなかった。
-    return null;
+    }).orElse(Optional.<String>empty());
   }
 }

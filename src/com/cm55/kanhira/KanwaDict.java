@@ -1,5 +1,7 @@
 package com.cm55.kanhira;
 
+import java.util.*;
+
 /**
  * 漢字かな辞書インターフェース
  * @author admin
@@ -11,5 +13,5 @@ public interface KanwaDict {
    * @param k　漢字熟語の最初の一文字
    * @return すべての熟語情報
    */
-  public KanjiYomiList lookup(char k);
+  public Optional<KanjiYomiList> lookup(char k);
 }

@@ -18,6 +18,7 @@
 package com.cm55.kanhira;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * This class implements conversion methods that converts a Hiragana word.
@@ -39,10 +40,10 @@ public class HiraganaConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public String convert(Input input) {
+  public Optional<String>convert(Input input) {
     int ch = input.first();
     if (!CharKind.isHiragana(ch)) {
-      return null;
+      return Optional.empty();
     }
     StringBuilder output = new StringBuilder();
     output.append((char) ch);
@@ -55,6 +56,6 @@ public class HiraganaConverter implements Converter {
       output.append((char) ch);
     }    
     input.consume(length);
-    return output.toString();
+    return Optional.of(output.toString());
   }
 }

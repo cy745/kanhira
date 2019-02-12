@@ -18,7 +18,7 @@ public class KanjiYomiMapTest {
       "悪徳不動産屋,あくとくふどうさんや,,6\n" + 
       "悪名高,あくめいたか,i,4\n" + 
       "悪名高,あくめいたか,k,4\n" + 
-      "悪代官,あくだいかん,,3", map.lookup('悪').toString());
+      "悪代官,あくだいかん,,3", map.lookup('悪').get().toString());
     
     Kanhira kakasi = new Kanhira(map);
     assertEquals("あくめいたかくあくめいたかいあくだいかん",

@@ -18,6 +18,7 @@
 package com.cm55.kanhira;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * This class is a default implementation of Converter interface.
@@ -39,10 +40,10 @@ public class DefaultConverter implements Converter {
    * @exception IOException
    *              if an I/O error occurred.
    */
-  public String convert(Input input) {
+  public Optional<String>convert(Input input) {
     int ch = input.first();
     if (ch < 0) {
-      return null;
+      return Optional.empty();
     }
     Character.UnicodeBlock pblock = Character.UnicodeBlock.of((char) ch);
     StringBuilder output = new StringBuilder();
@@ -69,7 +70,7 @@ public class DefaultConverter implements Converter {
         break;
       }
     }
-    return output.toString();
+    return Optional.of(output.toString());
   }
 
   private boolean isJapanese(Character.UnicodeBlock block) {
