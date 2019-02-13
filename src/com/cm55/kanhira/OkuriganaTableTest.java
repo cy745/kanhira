@@ -1,35 +1,13 @@
 package com.cm55.kanhira;
 
+import org.junit.*;
+import static org.junit.Assert.*;
+
 import java.util.*;
 
-/**
- * あるひらがな文字が漢字の送り仮名として適当かどうかをチェックするためのテーブル。
- * 例えば、「悪く」の「く」という送り仮名が適当かどうかは、「悪」という熟語の送り仮名イニシャルとして「k」が
- * あるかないかで決まる。
- * @author admin
- */
-public class OkuriganaTable {
+public class OkuriganaTableTest {
 
-  
-  /**
-   * チェック対象の文字が送り仮名として適当であるかを調べる。
-   * @param target チェック対称の文字
-   * @param okurigana 送り仮名マーク
-   * @return true:適当、false:不適当
-   */
-  public static boolean check(char target, char okurigana) {
-    
-    // その文字を送り仮名テーブルで探す。なければ不適当な送り仮名
-    String okuriganaList = map.get(target);
-    if (okuriganaList == null) return false;
 
-    // この漢字の送り仮名としてありえなければエラー。
-    if (okuriganaList.indexOf(okurigana) < 0) return false;
-    
-    // 送り仮名が適当
-    return true;
-  }
-  
   static final Object[] TABLE = {
     'ぁ', "aiueow", // 3041
     'あ', "aiueow", // 3042
@@ -118,11 +96,36 @@ public class OkuriganaTable {
     'ヶ', "k", // 30f6
   };
   
-  private static final Map<Character, String> map = new HashMap<>();
-  static {
-    for (int i = 0; i < TABLE.length; i += 2) {
-      map.put((Character)TABLE[i + 0], (String)TABLE[i + 1]);
-    }    
+  @Test
+  public void test() {
+    for (int i = 0; i < OkuriganaTable.TABLE.length; i += 2) {
+      char ch = (Character)OkuriganaTable.TABLE[i + 0];
+      String initials = (String)OkuriganaTable.TABLE[i + 1];
+      for (char initial: initials.toCharArray()) {
+        assertTrue(OkuriganaTable.check(ch, initial));
+      }
+    }
   }
 
+  public static void main(String[]args) {
+    
+    Map<Character, String>map = new HashMap<>();
+    
+    for (int i = 0; i < OkuriganaTable.TABLE.length; i += 2) {
+      char ch = (Character)TABLE[i + 0];
+      String initials = (String)TABLE[i + 1];
+      for (char initial: initials.toCharArray()) {
+        String chars = map.get(initial);
+        if (chars == null) chars = "";
+        chars = chars + ch;
+        map.put(initial,  chars);
+      }
+    }
+    
+    map.entrySet().stream().forEach(e-> {
+      System.out.print("  '" + e.getKey() + "', ");
+      System.out.print("\"" + e.getValue() + "\",");
+      System.out.println("");
+    });
+  }
 }
