@@ -7,9 +7,9 @@ import java.util.stream.*;
  * 最初の文字が同じ漢字の熟語について、その漢字の長さ順に{@link KanjiYomi}を格納したもの。
  * 例えば、最初が「悪」の場合には、
  * <ul>
- * <li>徳不動産屋
- * <li>天候時
- * <li>代官
+ * <li>悪徳不動産屋
+ * <li>悪天候時
+ * <li>悪代官
  * </ul>
  * の順序で格納されている。
  * つまり、最長一致の方針になっている。
@@ -24,18 +24,18 @@ public class KanjiYomiList  {
   private TreeSet<KanjiYomi>list = new TreeSet<>();
   
   /** {@link KanjiYomi}を追加する */
-  public void add(KanjiYomi kanjiYomi) {
+  public synchronized void add(KanjiYomi kanjiYomi) {
     list.add(kanjiYomi);
 
   }
   
   /** {@link KanjiYomi}を削除する */
-  public boolean remove(KanjiYomi kanjiYomi) {
+  public synchronized boolean remove(KanjiYomi kanjiYomi) {
     return list.remove(kanjiYomi);    
   }
 
   /** 登録数を取得する */
-  public int size() {
+  public synchronized int size() {
     return list.size();
   }
 
@@ -43,12 +43,12 @@ public class KanjiYomiList  {
    * このリストに含まれる{@link KanjiYomi}の{@link KanjiYomi#wholeLength()}のうちの最大長を返す。
    * @return
    */
-  public int maxWholeLength() {
+  public synchronized int maxWholeLength() {
     return list.first().wholeLength();
   }
 
   /** 処理用のストリームを取得 */
-  public Stream<KanjiYomi>stream() {
+  public synchronized Stream<KanjiYomi>stream() {
     return list.stream();
   }
   
@@ -56,7 +56,7 @@ public class KanjiYomiList  {
    * デバッグ用。文字列化
    */
   @Override
-  public String toString() {
+  public synchronized String toString() {
     return list.stream().map(s->s.toString()).collect(Collectors.joining("\n"));
   }
 }

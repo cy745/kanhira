@@ -15,7 +15,7 @@ public class KanjiYomiMap implements KanwaDict {
    * @param kanji 漢字。例えば"悪名高"
    * @param yomi よみ。例えば"あくめいたかi"
    */
-  public void add(String kanji, String yomi) {
+  public synchronized void add(String kanji, String yomi) {
     Parsed p = new Parsed(kanji, yomi);
     add(p.key, new KanjiYomi(p.kanji, p.yomi, p.okurigana));
   }
@@ -28,7 +28,7 @@ public class KanjiYomiMap implements KanwaDict {
    * @param yomi よみ
    * @return
    */
-  public boolean remove(String kanji, String yomi) {
+  public synchronized boolean remove(String kanji, String yomi) {
     Parsed p = new Parsed(kanji, yomi);
     KanjiYomiList list = map.get(p.key);
     if (list == null) return false;
@@ -45,7 +45,7 @@ public class KanjiYomiMap implements KanwaDict {
    * @param key '悪名高い'の場合は'悪'
    * @param kanjiYomi 上記漢字の残りの部分の読みがな。{@link KanjiYomi}を参照のこと。
    */
-  private void add(char key, KanjiYomi kanjiYomi) {
+  private synchronized void add(char key, KanjiYomi kanjiYomi) {
     KanjiYomiList list = map.get(key);
     if (list == null) {
       list = new KanjiYomiList();
@@ -54,18 +54,15 @@ public class KanjiYomiMap implements KanwaDict {
     list.add(kanjiYomi);
   }
 
+  /** {@inheritDoc} */
   @Override
-  public Optional<KanjiYomiList>lookup(char k) {
+  public synchronized Optional<KanjiYomiList>lookup(char k) {
     return Optional.ofNullable(map.get(k));
-  }
-
-  public Stream<Map.Entry<Character, KanjiYomiList>>stream() {
-    return map.entrySet().stream();
   }
   
   /** デバッグ用。文字列化 */
   @Override
-  public String toString() {  
+  public synchronized String toString() {  
     return map.entrySet().stream().sorted(Comparator.comparing(Map.Entry::getKey))
       .map(e->e.getKey() + "----\n" + e.getValue().toString() + "\n")
       .collect(Collectors.joining());    

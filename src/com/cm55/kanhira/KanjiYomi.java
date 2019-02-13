@@ -140,7 +140,7 @@ public class KanjiYomi implements Comparable<KanjiYomi> {
     // 送り仮名がある場合、チェック対称の送り仮名が適当であるか調べ、適当であれば、その文字を加えて返す。
     if (target.length() <= kanjiLength) return Optional.empty();
     char ch = target.charAt(kanjiLength);
-    if (!OkuriganaTable.check(ch, okuriIni.get())) return Optional.empty();
+    if (!OkuriganaTable.check(okuriIni.get(), ch)) return Optional.empty();
     return Optional.of(yomi + ch);
   }
 
