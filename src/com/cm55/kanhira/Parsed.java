@@ -24,12 +24,13 @@ class Parsed {
   
   Parsed(String kanjiInput, String yomiInput) {
 
+    // 漢字入力の一文字目のみを漢字コードか調べる、二文字目以降は漢字でなくてもよい。「貴ノ花」など。
     Character.UnicodeBlock kanjiBlock = Character.UnicodeBlock.of(kanjiInput.charAt(0));
     if (!kanjiBlock.equals(Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) {
       throw new IllegalArgumentException("First character not Kanji:" + kanjiInput);
     }
     
-    // 異体字を普通字に変換する。比較の時もあらかじめ異体字が普通字に変換された比較される。    
+    // 異体字を普通字に変換する。比較の時もあらかじめ異体字が普通字に変換され比較される。    
     kanji = ItaijiTable.convert(kanjiInput);
     key = kanji.charAt(0);
 
