@@ -7,7 +7,7 @@ import java.util.*;
 
 public class OkuriganaTableTest {
 
-
+  /** もともとのコードでのチェックテーブル */
   static final Object[] TABLE = {
     'ぁ', "aiueow", // 3041
     'あ', "aiueow", // 3042
@@ -98,20 +98,27 @@ public class OkuriganaTableTest {
   
   @Test
   public void test() {
-    for (int i = 0; i < OkuriganaTable.TABLE.length; i += 2) {
-      char ch = (Character)OkuriganaTable.TABLE[i + 0];
-      String initials = (String)OkuriganaTable.TABLE[i + 1];
-      for (char initial: initials.toCharArray()) {
-        assertTrue(OkuriganaTable.check(ch, initial));
-      }
+    // 登録文字についてチェック
+    for (int i = 0; i < TABLE.length; i += 2) {
+      char ch = (Character)TABLE[i + 0];
+      String initials = (String)TABLE[i + 1];
+      
+      for (int initial = 'a'; initial <= 'z'; initial++) {
+        if (initials.indexOf((char)initial) >= 0) {  
+          assertTrue(OkuriganaTable.check((char)initial, ch));
+        } else {
+          assertFalse(OkuriganaTable.check((char)initial, ch));
+        }
+      }      
     }
   }
 
+  /** もともとのコードテーブルから新たなOkuriganaTableを作成する */
   public static void main(String[]args) {
     
     Map<Character, String>map = new HashMap<>();
     
-    for (int i = 0; i < OkuriganaTable.TABLE.length; i += 2) {
+    for (int i = 0; i < TABLE.length; i += 2) {
       char ch = (Character)TABLE[i + 0];
       String initials = (String)TABLE[i + 1];
       for (char initial: initials.toCharArray()) {
